@@ -1,4 +1,4 @@
-maximum-matching
-================
+Graph Theory: Maximum Matching
+==============================
 
-Graph Theory - Implementation of Maximum Matching using C
+This repository have study purpose only.
