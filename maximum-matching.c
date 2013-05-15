@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "graph.h"
 
 char* ERROR_MESSAGE;
@@ -55,10 +56,34 @@ void display_error() {
   ERROR_MESSAGE = ""; // Clear the error handling variable for future usage
 }
 
+/*
+ * The main program optionally accepts one argv that describes the filename
+ * for converting the graph to the working data structure
+ */
 int main(int argc, char* argv[]) {
-  int r;
-  if (read_graph("graph") == -1) {
-    display_error();
+  char* filename;
+  int read_status = 0;
+
+  filename = (char*) malloc(128 * sizeof(char));
+  
+  if (argc > 1) {
+    filename = argv[1];
+    if (read_graph(filename) == -1) {
+      display_error();
+    }
   }
+
+  do {  
+    if (read_status == -1) {
+      display_error();
+    }
+    printf("Type the filename or 'exit' to quit the program.\n");
+    scanf("%128s", filename);
+    if (strcmp(filename, "exit")) {
+      return 0;
+    }
+    read_status = read_graph(filename);
+  } while (read_status == -1);
+
   return 0;
 }
