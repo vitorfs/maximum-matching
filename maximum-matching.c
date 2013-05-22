@@ -22,8 +22,6 @@
 #include <string.h>
 #include "graph.h"
 
-char* ERROR_MESSAGE;
-
 /*
  * The read_graph function takes a pointer to char as parameter which represents
  * the name of the file which contains the information of the graph we want 
@@ -31,29 +29,68 @@ char* ERROR_MESSAGE;
  * a valid graph representation.
  * This function will return 0 in case of success or -1 if any error occur. 
  */
-int read_graph(char* filename) {
+int read_graph(char* filename, Graph* g) {
   FILE *PTRFILE;
-  
+
   PTRFILE = fopen(filename, "rt");
   
   if (PTRFILE == NULL) {
-    ERROR_MESSAGE = "File doesn't exist.";
     return -1;
   }
   
   else {
+    empty_graph(g);
+
+  
+    char line[80];
+    char str_aux[80];
+    int i;
+    int j;
+    int k;
+    int arc_1;
+    int arc_2;
+    int weight = 0;
     
+    for (i = 0 ; fgets(line, 80, PTRFILE) != NULL ; i++) {
+      if (i == 0) {
+        insert_vertex(g, atoi(line));
+      }
+
+      else {
+        for (j = 0, k = 0 ; j < 80 && line[j] != 32 && line[j] != '\0' ; j++, k++) 
+          str_aux[k] = line[j];
+
+        str_aux[k] = '\0';
+        arc_1 = atoi(str_aux);
+        
+        j = j + 1;
+        str_aux[0] = '\0';
+
+        for (k = 0 ; j < 80 && line[j] != 32 && line[j] != '\0' ; j++, k++)
+          str_aux[k] = line[j];
+
+        str_aux[k] = '\0';
+        arc_2 = atoi(str_aux);
+        
+        j = j + 1;
+        str_aux[0] = '\0';
+
+        for (k = 0 ; j < 80 && line[j] != 32 && line[j] != '\0' ; j++, k++)
+          str_aux[k] = line[j];
+
+        str_aux[k] = '\0';
+        weight = atoi(str_aux);
+
+        if (weight == 0) weight = 1;
+
+        insert_arc(g, arc_1, arc_2, weight);
+      }
+
+    }
+
   }
 
   return 0;
-}
-
-/*
- * The display_error procedure displays the error message for the user
- */
-void display_error() {
-  printf("%s\n", ERROR_MESSAGE);
-  ERROR_MESSAGE = ""; // Clear the error handling variable for future usage
 }
 
 /*
@@ -62,28 +99,36 @@ void display_error() {
  */
 int main(int argc, char* argv[]) {
   char* filename;
-  int read_status = 0;
+  int read_status = -1;
+  
+  Graph* graph = (Graph*) malloc(sizeof(Graph));
 
   filename = (char*) malloc(128 * sizeof(char));
   
   if (argc > 1) {
     filename = argv[1];
-    if (read_graph(filename) == -1) {
-      display_error();
+    read_status = read_graph(filename, graph);
+    if (read_status == -1) {
+      printf("File doesn't exist.\n");
     }
   }
 
-  do {  
-    if (read_status == -1) {
-      display_error();
-    }
+  if (read_status == -1) {
     printf("Type the filename or 'exit' to quit the program.\n");
-    scanf("%128s", filename);
-    if (strcmp(filename, "exit")) {
-      return 0;
-    }
-    read_status = read_graph(filename);
-  } while (read_status == -1);
+    do {
+      scanf("%128s", filename);
+      if (strcmp(filename, "exit") == 0) {
+        return 0;
+      }
+      read_status = read_graph(filename, graph);
+      if (read_status == -1) {
+        printf("File doesns't exist.\n");
+      }
+    } while (read_status == -1);
+
+  }
+
+  print_graph(graph);
 
   return 0;
 }
