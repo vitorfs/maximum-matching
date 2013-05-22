@@ -40,7 +40,6 @@ int read_graph(char* filename, Graph* g) {
   
   else {
     empty_graph(g);
-
   
     char line[80];
     char str_aux[80];
@@ -93,6 +92,35 @@ int read_graph(char* filename, Graph* g) {
   return 0;
 }
 
+Graph* greedy_matching(Graph* g) {
+  Graph* m = (Graph*) malloc(sizeof(Graph));
+
+  init_graph(m, g->vertex_count);
+  
+  int i;
+  int j;
+
+  // Make a copy of the graph ignoring loops
+  for (i = 0 ; i < g->vertex_count ; i++)
+    for (j = 0 ; j < g->vertex_count ; j++)
+      if (i != j)
+        m->arcs[i][j] = g->arcs[i][j];
+
+  int* adj;
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    adj = get_adjacency(g, i);
+    if (adj != NULL) {
+      print_adjacency(adj);
+      free(adj);
+      adj = NULL;
+    }
+  }
+  
+  get_ordered_adj(g);
+
+  return m;
+}
+
 /*
  * The main program optionally accepts one argv that describes the filename
  * for converting the graph to the working data structure
@@ -129,6 +157,7 @@ int main(int argc, char* argv[]) {
   }
 
   print_graph(graph);
+  greedy_matching(graph);
 
   return 0;
 }

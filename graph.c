@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "graph.h"
+#include "quicksort.h"
 
 void empty_graph(Graph* g) {
   g->vertex_count = 0;
@@ -50,19 +51,57 @@ int exists_arc(Graph* g, int a1, int a2) {
 }
 
 int* get_adjacency(Graph* g, int v) {
-  int* adjacency = (int*) malloc(sizeof(int));
-  adjacency[0] = 0; // Using the first position of the pointer to determine the size of the array
+  int degree;
+
+  degree = get_vertex_degree(g, v);
+
+  int* adjacency = (int*) malloc((degree + 1) * sizeof(int));
+
+  adjacency[0] = degree; // Using the first position of the pointer to determine the size of the array
   
   int i;
-  for (i = 0 ; i < g->vertex_count ; i++) {
+  int j;
+  for (i = 0, j = 1 ; i < g->vertex_count ; i++) {
     if (g->arcs[i][v] > 0) {
-      adjacency[0]++;
-      adjacency = (int*) realloc(adjacency, adjacency[0] * sizeof(int));
-      adjacency[adjacency[0]] = i;
+      adjacency[j++] = i;
     }
   }
 
   return adjacency;
+}
+
+int get_vertex_degree(Graph* g, int v) {
+  int i;
+  int degree = 0;
+
+  for (i = 0 ; i < g->vertex_count ; i++)
+    if (g->arcs[i][v] > 0)
+      degree++;
+
+  return degree;
+}
+
+Vertex_Degree* get_ordered_adj(Graph* g) {
+  Vertex_Degree* adj = (Vertex_Degree*) malloc(g->vertex_count * sizeof(Vertex_Degree));
+
+  int i;
+
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    adj[i].vertex = i;
+    adj[i].degree = get_vertex_degree(g, i);
+  }
+
+
+  for (i = 0 ; i < g->vertex_count ; i++)
+    printf("%d %d\n", adj[i].vertex, adj[i].degree);
+
+  quicksort(adj, 0, g->vertex_count - 1);
+  printf("\n");
+  for (i = 0 ; i < g->vertex_count ; i++)
+    printf("%d %d\n", adj[i].vertex, adj[i].degree);
+
+  return adj;
+
 }
 
 void insert_vertex(Graph* g, int v) {
@@ -115,7 +154,11 @@ int remove_vertex(Graph* g, int v) {
 void print_graph(Graph* g) {
   int i, j;
 
+  printf("  ");
+  for (i = 0 ; i < g->vertex_count ; i++) printf(" %d ", i);
+  printf("\n");
   for (i = 0 ; i < g->vertex_count ; i++) {
+    printf("%d ", i);
     for (j = 0 ; j < g->vertex_count ; j++) {
       printf("[%d]", g->arcs[i][j]);
     }
@@ -129,6 +172,8 @@ void print_adjacency(int* a) {
 
   for (i = 1 ; i <= a[0] ; i++)
     printf("[%d]", a[i]);
+
+  if (a[0] == 0) printf("\n");
 
   printf("\n");
 }

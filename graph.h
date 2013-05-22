@@ -6,6 +6,11 @@ typedef struct {
   int** arcs; // 0 represents the lack of adjacency
 } Graph;
 
+typedef struct {
+  int vertex;
+  int degree;
+} Vertex_Degree;
+
 void empty_graph(Graph* g);
 void init_graph(Graph* g, int v);
 void free_graph(Graph* g);
