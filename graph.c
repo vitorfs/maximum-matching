@@ -82,8 +82,8 @@ int get_vertex_degree(Graph* g, int v) {
   return degree;
 }
 
-Vertex_Degree* get_ordered_adj(Graph* g) {
-  Vertex_Degree* adj = (Vertex_Degree*) malloc(g->vertex_count * sizeof(Vertex_Degree));
+Vertex* get_ordered_adj(Graph* g) {
+  Vertex* adj = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
 
   int i;
 

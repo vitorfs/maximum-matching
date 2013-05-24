@@ -9,7 +9,7 @@ typedef struct {
 typedef struct {
   int vertex;
   int degree;
-} Vertex_Degree;
+} Vertex;
 
 void empty_graph(Graph* g);
 void init_graph(Graph* g, int v);

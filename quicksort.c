@@ -1,12 +1,12 @@
 #include "graph.h"
 
-void swap(Vertex_Degree* x, Vertex_Degree* y) {
-  Vertex_Degree z = *x;
+void swap(Vertex* x, Vertex* y) {
+  Vertex z = *x;
   *x = *y;
   *y = z;
 }
 
-int partition(Vertex_Degree* array, int p, int r) {
+int partition(Vertex* array, int p, int r) {
   int pivot, i, j;
 
   pivot = array[r].degree;
@@ -24,7 +24,7 @@ int partition(Vertex_Degree* array, int p, int r) {
   return i + 1;
 }
 
-void quicksort(Vertex_Degree* array, int p, int r) {
+void quicksort(Vertex* array, int p, int r) {
   int q;
   if (p <= r) {
     q = partition(array, p, r);
