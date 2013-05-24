@@ -109,16 +109,24 @@ Graph* maximal_matching(Graph* g) {
   int* adj;
   for (i = 0 ; i < g->vertex_count ; i++) {
     adj = get_adjacency(g, i);
-    if (adj != NULL) {
-      print_adjacency(adj);
-      free(adj);
-      adj = NULL;
-    }
   }
   
   get_ordered_adj(g);
 
   return m;
+}
+
+Graph* hungarian(Graph* g) {
+  Graph* m = (Graph*) malloc(sizeof(Graph));
+
+  init_graph(m, g->vertex_count);
+  
+  int i;
+  int j;
+
+  int* s = (int*) malloc(sizeof(int));
+  s[0] = 0;
+
 }
 
 /*
