@@ -92,7 +92,7 @@ int read_graph(char* filename, Graph* g) {
   return 0;
 }
 
-Graph* greedy_matching(Graph* g) {
+Graph* maximal_matching(Graph* g) {
   Graph* m = (Graph*) malloc(sizeof(Graph));
 
   init_graph(m, g->vertex_count);
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]) {
   }
 
   print_graph(graph);
-  greedy_matching(graph);
+  maximal_matching(graph);
 
   return 0;
 }
