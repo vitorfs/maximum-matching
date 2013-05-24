@@ -14,16 +14,17 @@ void init_graph(Graph* g, int n) {
 
   g->vertex_count = n;
 
-  g->arcs = (int**) malloc(n * sizeof(int*));
+  g->arcs = (int**) calloc(n, sizeof(int*));
   for (i = 0 ; i < g->vertex_count ; i++)
-    g->arcs[i] = (int*) malloc(n * sizeof(int));
-
-  for (i = 0 ; i < n ; i++)
-    for (j = 0 ; j < n ; j++)
-      g->arcs[i][j] = 0;
+    g->arcs[i] = (int*) calloc(n, sizeof(int));
 }
 
 void free_graph(Graph* g) {
+  int i;
+
+  for (i = 0 ; i < g->vertex_count ; i++)
+	 free(g->arcs[i]);
+
   free(g);
   g = NULL;
 }
@@ -62,7 +63,7 @@ int* get_adjacency(Graph* g, int v) {
   
   int i;
   int j;
-  for (i = 0, j = 1 ; i < g->vertex_count ; i++) {
+  for (i = 0, j = 1 ; j <= degree ; i++) {
     if (g->arcs[i][v] > 0) {
       adjacency[j++] = i;
     }
@@ -119,12 +120,11 @@ void insert_vertex(Graph* g, int v) {
       g->arcs[i] = (int*) realloc(g->arcs[i], g->vertex_count * sizeof(int)); // realloc the part of the matrix which were used before
 
     for ( ; i < g->vertex_count ; i++) 
-      g->arcs[i] = (int*) malloc(g->vertex_count * sizeof(int)); // alloc the new part of the matrix
+      g->arcs[i] = (int*) calloc(g->vertex_count, sizeof(int)); // alloc the new part of the matrix
 
-    for (i = 0 ; i < g->vertex_count ; i++) {
+    for (i = 0 ; i < g->vertex_count - v ; i++) {
       for (j = g->vertex_count - v ; j < g->vertex_count ; j++) {
         g->arcs[i][j] = 0;
-        g->arcs[j][i] = 0;
       }
     }
   }
@@ -157,15 +157,14 @@ void print_graph(Graph* g) {
 
   printf("  ");
   for (i = 0 ; i < g->vertex_count ; i++) printf(" %d ", i);
-  printf("\n");
   for (i = 0 ; i < g->vertex_count ; i++) {
+	 printf("\n");
     printf("%d ", i);
     for (j = 0 ; j < g->vertex_count ; j++) {
       printf("[%d]", g->arcs[i][j]);
     }
-    printf("\n");
   }
-  printf("\n");
+  printf("\n\n");
 }
 
 void print_adjacency(int* a) {
