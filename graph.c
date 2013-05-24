@@ -25,6 +25,7 @@ void init_graph(Graph* g, int n) {
 
 void free_graph(Graph* g) {
   free(g);
+  g = null;
 }
 
 int insert_arc(Graph* g, int a1, int a2, int weight) {
