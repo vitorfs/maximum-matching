@@ -1,35 +1,13 @@
-#ifndef _SET_C_
-#define _SET_C_
+#include "set.h"
 
-#include <stdlib.h>
-#include "graph.h"
-
-typedef struct set {
-   int vertex;
-   struct set* next;
-} Set;
-
-// semântica 1 - conjunto recíproco de arestas
-// semântica 2 - caminho (depende de um vértice inicial)
-typedef struct arcs {
-   int** arcs; 
-} Arcs;
-
-// inicializa uma lista Set vazia
-// Set* X = init_set();
 Set* init_set() {
    return NULL;
 }
 
-// limpa sujeiras da memória
 void empty_arcs(Arcs* e) {
    e->arcs = NULL;
 }
 
-// n equivale a quantidade de nós
-// índice das colunas indicam os vértices de uma extremidade da aresta
-// linha e->arcs[0][] representa o vértice da outra extremidade da aresta
-// linha e->arcs[1][] representa o peso da aresta
 void init_arcs(Arcs* e, int n) {
    int i; 
    empty_arcs(e);
@@ -44,8 +22,6 @@ void init_arcs(Arcs* e, int n) {
       e->arcs[1][i] = -1;
 }
 
-// insere um vértice na lista Set
-// X = insert_set(5, X)
 Set* insert_set(int v , Set *old) {
    Set *new = (Set*) malloc(sizeof(Set));
    new->vertex = v;
@@ -54,7 +30,6 @@ Set* insert_set(int v , Set *old) {
    return new;
 }
 
-// Retorna 1 se existe e 0 se não existe o vértice na lista
 int exist_vertex_set(int v, Set *a) {
    for ( ; a != NULL; a = a->next)
       if (a->vertex == v)
@@ -63,7 +38,6 @@ int exist_vertex_set(int v, Set *a) {
    return 0;
 }
 
-// Retorna -1 se M-saturado ou um vértice livre
 int saturation_set(Set* a, Arcs* M) {
    int v;
    
@@ -74,7 +48,8 @@ int saturation_set(Set* a, Arcs* M) {
 }
 
 Arcs* diferenca_simetrica_arcs(Arcs* M, Arcs* P) {
-   
+
+	return NULL;   
 }
 
 void caminho_alternante() {
@@ -98,5 +73,3 @@ void define_biparticao(int v, Graph *g, Set *X, Set *Y) {
       if (g->arcs[v][j] > 0 && aux[v] == 0)
          define_biparticao(j, g, Y, X);
 }
-
-#endif

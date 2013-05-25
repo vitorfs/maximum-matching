@@ -106,7 +106,7 @@ Vertex* get_ordered_adj(Graph* g) {
 
 }
 
-void insert_vertex(Graph* g, int v) {
+void insert_vertex(Graph* g, int n) {
   if (g->arcs == NULL) {
     init_graph(g, v); 
   }

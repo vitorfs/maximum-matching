@@ -15,3 +15,7 @@
 *.exe
 *.out
 *.app
+
+# OS generated files
+*.swp
+*.swo

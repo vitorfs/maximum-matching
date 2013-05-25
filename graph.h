@@ -12,14 +12,15 @@ typedef struct {
 } Vertex;
 
 void empty_graph(Graph* g);
-void init_graph(Graph* g, int v);
+void init_graph(Graph* g, int n);
 void free_graph(Graph* g);
-Graph* transpose_graph(Graph* g);
 int insert_arc(Graph* g, int a1, int a2, int weight);
 int remove_arc(Graph* g, int a1, int a2);
 int exists_arc(Graph* g, int a1, int a2);
 int* get_adjacency(Graph* g, int v);
-void insert_vertex(Graph* g, int v);
+int get_vertex_degree(Graph* g, int v);
+Vertex* get_ordered_adj(Graph* g);
+void insert_vertex(Graph* g, int n);
 int remove_vertex(Graph* g, int v);
 void print_graph(Graph* g);
 void print_adjacency(int* a);
