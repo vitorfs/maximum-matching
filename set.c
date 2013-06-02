@@ -74,7 +74,27 @@ void insert_arcs(int u, int v, int weight, Arcs *M) {
    M->arcs[1][v] = weight;
 }
 
+void remove_set(int v, Set *a) {
+   Set *temp = init_set();
+
+   if (a->vertex == v) {
+      temp = a;
+      a = a->next;
+      free(temp);
+   }
+   for ( ; a != NULL ; a = a->next)
+      if (a->next->vertex == v) {
+         temp = a->next;
+         a->next = a->next->next;
+         free(temp);
+      }
+}
+
 void remove_arcs(int u, int v, Arcs *M) {
+   M->arcs[0][u] = -1;
+   M->arcs[0][v] = -1;
+   M->arcs[1][u] = -1;
+   M->arcs[1][v] = -1;
 }
 
 int exist_vertex_set(int v, Set *a) {
