@@ -30,8 +30,11 @@ Set* insert_set(int v , Set *old) {
    return new;
 }
 
-void insert_arcs(int u, int v, Arcs *M) {
-   
+void insert_arcs(int u, int v, int weight, Arcs *M) {
+   M->arcs[0][u] = v;
+   M->arcs[0][v] = u;
+   M->arcs[1][u] = weight;
+   M->arcs[1][v] = weight;
 }
 
 int exist_vertex_set(int v, Set *a) {
