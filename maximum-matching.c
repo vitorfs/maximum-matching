@@ -22,6 +22,8 @@
 #include <string.h>
 #include "graph.h"
 
+int PRINT_MATRIX = 0;
+
 /*
  * The read_graph function takes a pointer to char as parameter which represents
  * the name of the file which contains the information of the graph we want 
@@ -97,8 +99,9 @@ int read_graph(char* filename, Graph* g) {
  */
 void print_matching(Graph* g) {
   int i, j;
-  
-  //print_graph(g);
+  int arc_count = 0;
+
+  if (PRINT_MATRIX == 1) print_graph(g);
 
   printf("G = (V, A)\n");
   printf("V = {");
@@ -111,10 +114,17 @@ void print_matching(Graph* g) {
     for (j = i ; j < g->vertex_count ; j++) {
       if (g->arcs[i][j] > 0) {
         printf("(%d, %d)", i, j);
+        arc_count++;
       }
     }
   }
   printf("}\n");
+
+  printf("Vertex count: %d\n", g->vertex_count);
+  printf("Arc count: %d\n", arc_count);
+  printf("Perfect matching: ");
+  arc_count == (g->vertex_count / 2) ? printf("Yes") : printf("No");
+  printf("\n");
 }
 
 /*
@@ -217,6 +227,12 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  if (argc > 2) {
+    if (strcmp(argv[2], "-p") == 0) {
+      PRINT_MATRIX = 1;
+    }
+  }
+
   if (read_status == -1) {
     printf("Type the filename or 'exit' to quit the program.\n");
     do {
@@ -232,7 +248,7 @@ int main(int argc, char* argv[]) {
 
   }
 
-  //print_graph(graph);
+  if (PRINT_MATRIX == 1) print_graph(graph);
 
   gmatching = maximal_matching(graph);
 
