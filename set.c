@@ -67,6 +67,17 @@ int saturation_set(Set *a, Arcs *M) {
    return -1;
 }
 
+void builds_neighborhood_set(Set *S, Set *NS, Graph *g) {
+   int v, j;
+
+   for ( ; S != NULL ; S = S->next) {
+      v = S->vertex;
+      for (j = 0 ; j < g->vertex_count ; j++) {
+         if (g->arcs[v][j] > 0)
+            insert_set(j, NS);
+   }
+}
+
 void bipartite_define_set(int v, Graph *g, Set *X, Set *Y) {
    int i, j;
    // Estrutura para auxiliar a busca por profundidade

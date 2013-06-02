@@ -45,7 +45,7 @@ int non_saturation_set(Set *a, Arcs *M);
 int saturation_set(Set *a, Arcs *M);
 
 // Constrói o conjunto NS contendo os vizinhos de S
-//void builds_neighborhood_set(Set *S, Set *NS);
+void builds_neighborhood_set(Set *S, Set *NS, Graph *g);
 
 // Retorna 1 se os conjuntos forem iguais e 0 se forem diferentes
 //int compare_set(Set *NS, Set *T);

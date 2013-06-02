@@ -30,7 +30,7 @@ Arcs* hungarian(Graph *g) {
 
       insert_set(u, S);
       T = init_set();
-      builds_neighborhood_set(S, NS);
+      builds_neighborhood_set(S, NS, g);
 
       while (!compare_set(NS, T)) {
          y = saturation_set(subtraction_set(NS, T), M);
@@ -39,7 +39,7 @@ Arcs* hungarian(Graph *g) {
          insert_set(M->arcs[0][y], S);
          insert_set(y, T);
 
-         builds_neighborhood_set(S, NS);
+         builds_neighborhood_set(S, NS, g);
       }
       if (compare_set(NS, T))
          return M;
