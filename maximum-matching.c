@@ -94,9 +94,11 @@ int read_graph(char* filename, Graph* g) {
 
 Graph* maximal_matching(Graph* g) {
   Graph* m = (Graph*) malloc(sizeof(Graph));
+  Graph* matching = (Graph*) malloc(sizeof(Graph));
 
   init_graph(m, g->vertex_count);
-  
+  init_graph(matching, g->vertex_count); 
+
   int i;
   int j;
 
@@ -106,24 +108,37 @@ Graph* maximal_matching(Graph* g) {
       if (i != j)
         m->arcs[i][j] = g->arcs[i][j];
 
-  /*int* adj;
-  for (i = 0 ; i < g->vertex_count ; i++) {
-    adj = get_adjacency(g, i);
-  }*/
-  
   Vertex* v = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
   //Vertex* v = NULL;
-  get_ordered_vertex(g, v);
- 
-  if (v == NULL) {
-    printf("TA NULO ESSA MERDA\n");
-    return;
+  get_ordered_vertex(m, v);
+  
+  int saturated[m->vertex_count];
+  for (i = 0 ; i < m->vertex_count ; i++)
+    saturated[i] = 0;
+
+  int* adj;
+  for (i = 0 ; i < m->vertex_count ; i++) {
+    int v1 = v[i].vertex;
+    int v2;
+
+    if (saturated[v1] == 0) {
+      adj = get_adjacency(m, v1);
+      if (adj[0] > 0) {
+        v2 = adj[1];
+         
+        insert_arc(matching, v1, v2, m->arcs[v1][v2]);
+        remove_arc(m, v1, v2);
+
+        free(adj);
+        saturated[v1] = 1;
+        saturated[v2] = 1;
+      }
+    }
   }
+  
+  print_graph(matching);
 
-  for (i = 0 ; i < g->vertex_count ; i++)
-    printf("[%d (%d)]", v[i].vertex, v[i].degree);
-
-  return m;
+  return matching;
 }
 
 Graph* hungarian(Graph* g) {
