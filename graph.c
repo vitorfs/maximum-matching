@@ -83,30 +83,31 @@ int get_vertex_degree(Graph* g, int v) {
   return degree;
 }
 
-Vertex* get_ordered_adj(Graph* g) {
-  Vertex* adj = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
+Vertex* get_ordered_vertex(Graph* g) {
+  Vertex* v = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
 
   int i;
 
   for (i = 0 ; i < g->vertex_count ; i++) {
-    adj[i].vertex = i;
-    adj[i].degree = get_vertex_degree(g, i);
+    v[i].vertex = i;
+    v[i].degree = get_vertex_degree(g, i);
   }
 
 
-  for (i = 0 ; i < g->vertex_count ; i++)
-    printf("%d %d\n", adj[i].vertex, adj[i].degree);
+  /*for (i = 0 ; i < g->vertex_count ; i++)
+    printf("%d %d\n", v[i].vertex, v[i].degree);*/
 
-  quicksort(adj, 0, g->vertex_count - 1);
-  printf("\n");
-  for (i = 0 ; i < g->vertex_count ; i++)
-    printf("%d %d\n", adj[i].vertex, adj[i].degree);
+  quicksort(v, 0, g->vertex_count - 1);
 
-  return adj;
+  /*printf("\n");
+  for (i = 0 ; i < g->vertex_count ; i++)
+    printf("%d %d\n", v[i].vertex, v[i].degree);*/
+
+  return v;
 
 }
 
-void insert_vertex(Graph* g, int n) {
+void insert_vertex(Graph* g, int v) {
   if (g->arcs == NULL) {
     init_graph(g, v); 
   }

@@ -20,7 +20,7 @@ int exists_arc(Graph* g, int a1, int a2);
 int* get_adjacency(Graph* g, int v);
 int get_vertex_degree(Graph* g, int v);
 Vertex* get_ordered_adj(Graph* g);
-void insert_vertex(Graph* g, int n);
+void insert_vertex(Graph* g, int v);
 int remove_vertex(Graph* g, int v);
 void print_graph(Graph* g);
 void print_adjacency(int* a);

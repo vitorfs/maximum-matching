@@ -111,7 +111,7 @@ Graph* maximal_matching(Graph* g) {
     adj = get_adjacency(g, i);
   }
   
-  get_ordered_adj(g);
+  get_ordered_vertex(g);
 
   return m;
 }
