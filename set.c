@@ -30,6 +30,10 @@ Set* insert_set(int v , Set *old) {
    return new;
 }
 
+void insert_arcs(int u, int v, Arcs *M) {
+   
+}
+
 int exist_vertex_set(int v, Set *a) {
    for ( ; a != NULL; a = a->next)
       if (a->vertex == v)
