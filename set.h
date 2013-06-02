@@ -19,14 +19,24 @@ typedef struct arcs {
 // Set* X = init_set();
 Set* init_set();
 
-// limpa sujeiras da memória
+// Limpa sujeiras da memória
 void empty_arcs(Arcs *e);
 
 // n equivale a quantidade de nós
 // Índice das colunas indicam os vértices de uma extremidade da aresta
 // Linha e->arcs[0][] representa o vértice da outra extremidade da aresta
 // Linha e->arcs[1][] representa o peso da aresta
-void init_arcs(Arcs *e, int n);
+Arcs* init_arcs(Arcs *e, int n);
+
+// Desaloca memória usada por Set *a
+void free_set(Set *a);
+
+// Desaloca memória usada por Arcs *e
+void free_arcs(Arcs *e);
+
+// Colaca a estrutura com o valor padrão,
+// ou seja, preenche a matriz com -1
+void zero_arcs(Arcs *e);
 
 // Insere um vértice na lista Set
 // X = insert_set(5, X)
