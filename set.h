@@ -32,6 +32,9 @@ void init_arcs(Arcs* e, int n);
 // X = insert_set(5, X)
 Set* insert_set(int v , Set *old);
 
+// Insere uma aresta em M
+//void insert_arcs(int u, int v, Arcs *M);
+
 // Retorna 1 se existe e 0 se não existe o vértice na lista
 int exist_vertex_set(int v, Set *a);
 
