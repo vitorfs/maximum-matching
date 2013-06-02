@@ -92,6 +92,35 @@ int read_graph(char* filename, Graph* g) {
   return 0;
 }
 
+/*
+ * This function has the job to print the matching result set from a graph g
+ */
+void print_matching(Graph* g) {
+  int i, j;
+  
+  //print_graph(g);
+
+  printf("G = (V, A)\n");
+  printf("V = {");
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    i == 0 ? printf("%d", i) : printf(", %d", i);
+  }
+  printf("}\n");
+  printf("A = {");
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    for (j = i ; j < g->vertex_count ; j++) {
+      if (g->arcs[i][j] > 0) {
+        printf("(%d, %d)", i, j);
+      }
+    }
+  }
+  printf("}\n");
+}
+
+/*
+ * This happend to be our first approuch to get the maximum matching.
+ * THe results are pretty satisfatory and the code complexity isnt that bad at all
+ */
 Graph* maximal_matching(Graph* g) {
   Graph* m = (Graph*) malloc(sizeof(Graph));
   Graph* matching = (Graph*) malloc(sizeof(Graph));
@@ -151,8 +180,6 @@ Graph* maximal_matching(Graph* g) {
     }
   }
   
-  print_graph(matching);
-
   return matching;
 }
 
@@ -178,6 +205,7 @@ int main(int argc, char* argv[]) {
   int read_status = -1;
   
   Graph* graph = (Graph*) malloc(sizeof(Graph));
+  Graph* gmatching = (Graph*) malloc(sizeof(Graph));
 
   filename = (char*) malloc(128 * sizeof(char));
   
@@ -204,8 +232,11 @@ int main(int argc, char* argv[]) {
 
   }
 
-  print_graph(graph);
-  maximal_matching(graph);
+  //print_graph(graph);
+
+  gmatching = maximal_matching(graph);
+
+  print_matching(gmatching);
 
   return 0;
 }
