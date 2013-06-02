@@ -57,8 +57,9 @@ void zero_arcs(Arcs *e) {
 
 // Deve garantir que o elemento não exista antes de inserir
 Set* insert_set(int v , Set *old) {
-//   for ( ; a != NULL ; a = a->next)
-      
+   for ( ; a != NULL ; a = a->next)
+      if (a == v)
+         return old;
 
    Set *new = (Set*) malloc(sizeof(Set));
    new->vertex = v;

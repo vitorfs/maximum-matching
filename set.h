@@ -49,6 +49,9 @@ void insert_arcs(int u, int v, int weight, Arcs *M);
 // Remove uma aresta em M
 void remove_arcs(int u, int v, Arcs *M);
 
+// Remove um elemento do conjunto Set *a
+void remove_set(int v, Set *a);
+
 // Retorna 1 se existe e 0 se não existe o vértice na lista
 int exist_vertex_set(int v, Set *a);
 
