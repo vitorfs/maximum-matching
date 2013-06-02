@@ -6,6 +6,7 @@
 void empty_graph(Graph* g) {
   g->vertex_count = 0;
   g->arcs = NULL;
+  g->vertex = NULL;
 }
 
 void init_graph(Graph* g, int n) {
@@ -13,10 +14,15 @@ void init_graph(Graph* g, int n) {
   empty_graph(g);
 
   g->vertex_count = n;
-
   g->arcs = (int**) calloc(n, sizeof(int*));
   for (i = 0 ; i < g->vertex_count ; i++)
     g->arcs[i] = (int*) calloc(n, sizeof(int));
+  g->vertex = (Vertex*) malloc(n * sizeof(Vertex));
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    g->vertex[i].vertex = i;
+    g->vertex[i].degree = 0;
+    g->vertex[i].saturated = 0;
+  }
 }
 
 void free_graph(Graph* g) {
@@ -24,7 +30,7 @@ void free_graph(Graph* g) {
 
   for (i = 0 ; i < g->vertex_count ; i++)
 	 free(g->arcs[i]);
-
+  free(g->vertex);
   free(g);
   g = NULL;
 }
@@ -33,6 +39,8 @@ int insert_arc(Graph* g, int a1, int a2, int weight) {
   if (a1 >= 0 && a1 < g->vertex_count && a2 >= 0 && a2 < g->vertex_count && g->arcs[a1][a2] == 0) {
     g->arcs[a1][a2] = weight;
     g->arcs[a2][a1] = weight;
+    g->vertex[a1].degree++;
+    g->vertex[a2].degree++;
     return 0;
   }
   return -1;
@@ -44,6 +52,8 @@ int remove_arc(Graph* g, int a1, int a2) {
     weight = g->arcs[a1][a2];
     g->arcs[a1][a2] = 0;
     g->arcs[a2][a1] = 0;
+    g->vertex[a1].degree--;
+    g->vertex[a2].degree--;
   }
   return weight;
 }

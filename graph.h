@@ -2,14 +2,16 @@
 #define GRAPH_H
 
 typedef struct {
-  int vertex_count;
-  int** arcs; // 0 represents the lack of adjacency
-} Graph;
-
-typedef struct {
   int vertex;
   int degree;
+  int saturated;
 } Vertex;
+
+typedef struct {
+  int vertex_count;
+  int** arcs; // 0 represents the lack of adjacency
+  Vertex* vertex;
+} Graph;
 
 void empty_graph(Graph* g);
 void init_graph(Graph* g, int n);
