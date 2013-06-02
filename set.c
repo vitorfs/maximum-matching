@@ -11,7 +11,7 @@ void empty_arcs(Arcs* e) {
 void init_arcs(Arcs* e, int n) {
    int i; 
    empty_arcs(e);
-   
+
    e->arcs = (int**) malloc(2 * sizeof(int*));
    e->arcs[0] = (int*) malloc(n * sizeof(int));
    e->arcs[1] = (int*) malloc(n * sizeof(int));
@@ -38,7 +38,7 @@ int exist_vertex_set(int v, Set *a) {
    return 0;
 }
 
-int saturation_set(Set* a, Arcs* M) {
+int non_saturation_set(Set* a, Arcs* M) {
    int v;
    
    for ( ; a != NULL ; a = a->next) {
@@ -49,17 +49,7 @@ int saturation_set(Set* a, Arcs* M) {
    return -1;
 }
 
-Arcs* diferenca_simetrica_arcs(Arcs* M, Arcs* P) {
-
-	return NULL;   
-}
-
-void caminho_aumentante() {
-   // em andamento
-   
-}
-
-void define_biparticao(int v, Graph *g, Set *X, Set *Y) {
+void bipartite_define_set(int v, Graph *g, Set *X, Set *Y) {
    int i, j;
    // Estrutura para auxiliar a busca por profundidade
    // Evita que vértices sejam inseridos mais de uma vez
@@ -74,5 +64,5 @@ void define_biparticao(int v, Graph *g, Set *X, Set *Y) {
   
    for (j = 0 ; j < g->vertex_count ; j++)
       if (g->arcs[v][j] > 0 && aux[v] == 0)
-         define_biparticao(j, g, Y, X);
+         bipartite_define_set(j, g, Y, X);
 }

@@ -36,15 +36,27 @@ Set* insert_set(int v , Set *old);
 int exist_vertex_set(int v, Set *a);
 
 // Retorna -1 se o conjunto a é M-saturado ou um vértice livre maior ou igual a zero
-int saturation_set(Set* a, Arcs* M);
+int non_saturation_set(Set* a, Arcs* M);
+
+// Retorna o primeiro vértice M-saturado
+//int saturation_set(Set* a, Arcs* M);
+
+// Constrói o conjunto NS contendo os vizinhos de S
+//void builds_neighborhood_set(Set *S, Set *NS);
+
+// Retorna 1 se os conjuntos forem iguais e 0 se forem diferentes
+//int compare_set(Set *NS, Set *T);
+
+// Retorna o primeiro conjunto menos o segundo
+//Set* subtraction_set(Set *NS, Set *T);
 
 // Retorna um conjunto de arcos que é resultado da diferença simétrica de M e P
-Arcs* diferenca_simetrica_arcs(Arcs* M, Arcs* P);
+//Arcs* symmetric_difference_arcs(Arcs* M, Arcs* P);
 
 // Encontra um caminho aumentante ou NULL
-void caminho_aumentante();
+Arcs* augmenting_path(int y, Graph *P);
 
-// Da um grafo g bipartido e um vértice v, constrói dois conjuntos de vértices X e Y
-void define_biparticao(int v, Graph *g, Set *X, Set *Y);
+// Dado um grafo g bipartido e um vértice v, constrói dois conjuntos de vértices X e Y
+void bipartite_define_set(int v, Graph *g, Set *X, Set *Y);
 
 #endif
