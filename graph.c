@@ -83,8 +83,8 @@ int get_vertex_degree(Graph* g, int v) {
   return degree;
 }
 
-Vertex* get_ordered_vertex(Graph* g) {
-  Vertex* v = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
+void get_ordered_vertex(Graph* g, Vertex* v) {
+  //v = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
   
   int i;
 
@@ -92,17 +92,8 @@ Vertex* get_ordered_vertex(Graph* g) {
     v[i].vertex = i;
     v[i].degree = get_vertex_degree(g, i);
   }
-
-  /*for (i = 0 ; i < g->vertex_count ; i++)
-    printf("%d %d\n", v[i].vertex, v[i].degree);*/
-
+  
   quicksort(v, 0, g->vertex_count - 1);
-
-  /*printf("\n");
-  for (i = 0 ; i < g->vertex_count ; i++)
-    printf("%d %d\n", v[i].vertex, v[i].degree);*/
-
-  return v;
 }
 
 void insert_vertex(Graph* g, int v) {

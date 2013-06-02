@@ -111,10 +111,15 @@ Graph* maximal_matching(Graph* g) {
     adj = get_adjacency(g, i);
   }*/
   
-  //Vertex* v = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
-  Vertex* v;
-  v = get_ordered_vertex(g);
-  
+  Vertex* v = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
+  //Vertex* v = NULL;
+  get_ordered_vertex(g, v);
+ 
+  if (v == NULL) {
+    printf("TA NULO ESSA MERDA\n");
+    return;
+  }
+
   for (i = 0 ; i < g->vertex_count ; i++)
     printf("[%d (%d)]", v[i].vertex, v[i].degree);
 
