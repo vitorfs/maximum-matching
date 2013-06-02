@@ -46,6 +46,9 @@ Set* insert_set(int v , Set *old);
 // Insere uma aresta em M
 void insert_arcs(int u, int v, int weight, Arcs *M);
 
+// Remove uma aresta em M
+void remove_arcs(int u, int v, Arcs *M);
+
 // Retorna 1 se existe e 0 se não existe o vértice na lista
 int exist_vertex_set(int v, Set *a);
 
@@ -65,7 +68,8 @@ void builds_neighborhood_set(Set *S, Set *NS, Graph *g);
 //Set* subtraction_set(Set *NS, Set *T);
 
 // Retorna um conjunto de arcos que é resultado da diferença simétrica de M e P
-//Arcs* symmetric_difference_arcs(Arcs *M, Arcs *P);
+// P usa da semântica 2 (caminho) e M da semântica 1 (conjunto de arcos)
+void symmetric_difference_arcs(int y, Arcs *P, Arcs *M);
 
 // Encontra um caminho aumentante ou NULL
 Arcs* augmenting_path(int y, Graph *P);

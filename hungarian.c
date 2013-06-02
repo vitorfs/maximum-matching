@@ -51,7 +51,7 @@ Arcs* hungarian(Graph *g) {
          y = non_saturation_set(subtraction_set(NS, T), M);
 
          P = augmenting_path(y, g);
-         M = symmetric_difference_arcs(M, P);
+         M = symmetric_difference_arcs(y, P, M);
       }
 
       u = non_saturation_set(X, M);

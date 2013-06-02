@@ -74,6 +74,9 @@ void insert_arcs(int u, int v, int weight, Arcs *M) {
    M->arcs[1][v] = weight;
 }
 
+void remove_arcs(int u, int v, Arcs *M) {
+}
+
 int exist_vertex_set(int v, Set *a) {
    for ( ; a != NULL; a = a->next)
       if (a->vertex == v)
@@ -113,6 +116,16 @@ void builds_neighborhood_set(Set *S, Set *NS, Graph *g) {
          if (g->arcs[v][j] > 0)
             insert_set(j, NS);
       }
+   }
+}
+
+void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
+   while (y >= 0) {
+      if (M->arcs[0][y] != P->arcs[0][y])
+         insert_arcs(y, P->arcs[0][y], P->arcs[1][y], M);
+      else
+         remove_arcs(y, P->arcs[0][y], M);
+      y = P->arcs[0][y];
    }
 }
 
