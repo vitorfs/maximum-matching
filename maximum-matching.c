@@ -123,7 +123,6 @@ Graph* maximal_matching(Graph* g) {
 
     if (saturated[v1] == 0) {
       adj = get_adjacency(m, v1);
-      print_adjacency(adj);
       if (adj[0] > 0) {
         v2 = adj[1];
         //int no_adj_available = 0;
