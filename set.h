@@ -12,6 +12,7 @@ typedef struct set {
 // Semântica 1 - conjunto recíproco de arestas (se existe aresta uv, existe vu)
 // Semântica 2 - caminho (existe aresta apenas em uma direção - depende de um vértice inicial)
 typedef struct arcs {
+   int n;
    int **arcs; 
 } Arcs;
 
@@ -26,7 +27,7 @@ void empty_arcs(Arcs *e);
 // Índice das colunas indicam os vértices de uma extremidade da aresta
 // Linha e->arcs[0][] representa o vértice da outra extremidade da aresta
 // Linha e->arcs[1][] representa o peso da aresta
-Arcs* init_arcs(Arcs *e, int n);
+Arcs* init_arcs(int n);
 
 // Desaloca memória usada por Set *a
 void free_set(Set *a);

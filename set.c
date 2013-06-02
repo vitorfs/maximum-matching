@@ -11,6 +11,8 @@ void empty_arcs(Arcs *e) {
 Arcs* init_arcs(int n) {
    int i;
    Arcs *e = (Arcs*) malloc(sizeof(Arcs));
+   e->n = n;
+
    empty_arcs(e);
 
    e->arcs = (int**) malloc(2 * sizeof(int*));
@@ -21,6 +23,8 @@ Arcs* init_arcs(int n) {
       e->arcs[0][i] = -1;
    for (i = 0 ; i < n ; i++)
       e->arcs[1][i] = -1;
+
+   return e;
 }
 
 void free_set(Set *a) {
@@ -43,15 +47,19 @@ void free_arcs(Arcs *e) {
 }
 
 void zero_arcs(Arcs *e) {
+   int i;
 
-   for (i = 0 ; i < n ; i++)
+   for (i = 0 ; i < e->n ; i++)
       e->arcs[0][i] = -1;
-   for (i = 0 ; i < n ; i++)
+   for (i = 0 ; i < e->n ; i++)
       e->arcs[1][i] = -1;
 }
 
 // Deve garantir que o elemento não exista antes de inserir
 Set* insert_set(int v , Set *old) {
+//   for ( ; a != NULL ; a = a->next)
+      
+
    Set *new = (Set*) malloc(sizeof(Set));
    new->vertex = v;
    new->next = old;
@@ -104,6 +112,7 @@ void builds_neighborhood_set(Set *S, Set *NS, Graph *g) {
       for (j = 0 ; j < g->vertex_count ; j++) {
          if (g->arcs[v][j] > 0)
             insert_set(j, NS);
+      }
    }
 }
 
