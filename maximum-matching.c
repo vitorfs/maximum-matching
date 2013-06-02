@@ -123,24 +123,30 @@ Graph* maximal_matching(Graph* g) {
 
     if (saturated[v1] == 0) {
       adj = get_adjacency(m, v1);
+      print_adjacency(adj);
       if (adj[0] > 0) {
-        
-        int no_adj_available = 0;
+        v2 = adj[1];
+        //int no_adj_available = 0;
 
-        for (j = 1 ; j <= adj[0] ; j++) {
-          if (saturated[adj[j]] == 0) {
-            v2 = adj[j];
-            no_adj_available = 1;
-          }
-        }
-        
-        if (no_adj_available == 1) {
+        //for (j = 1 ; j <= adj[0] ; j++) {
+          //if (saturated[adj[j]] == 0) {
+            //v2 = adj[j];
+            //no_adj_available = 1;
+          //}
+        //}
+        //if (no_adj_available == 1) {
           insert_arc(matching, v1, v2, m->arcs[v1][v2]);
-          remove_arc(m, v1, v2);
+          //remove_arc(m, v1, v2);
           free(adj);
           saturated[v1] = 1;
           saturated[v2] = 1;
-        }
+
+          for (j = 0 ; j < m->vertex_count ; j++) {
+            remove_arc(m, v1, j);
+            remove_arc(m, v2, j);
+          }
+            
+        //}
 
       }
     }
