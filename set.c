@@ -41,9 +41,11 @@ int exist_vertex_set(int v, Set *a) {
 int saturation_set(Set* a, Arcs* M) {
    int v;
    
-   for (v = a->vertex ; a != NULL ; a = a->next)
+   for ( ; a != NULL ; a = a->next) {
+      v = a->vertex;
       if (M->arcs[0][v] < 0)
          return v;
+   }
    return -1;
 }
 
@@ -52,8 +54,9 @@ Arcs* diferenca_simetrica_arcs(Arcs* M, Arcs* P) {
 	return NULL;   
 }
 
-void caminho_alternante() {
-  // em andamento
+void caminho_aumentante() {
+   // em andamento
+   
 }
 
 void define_biparticao(int v, Graph *g, Set *X, Set *Y) {
