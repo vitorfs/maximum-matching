@@ -4,11 +4,11 @@ Set* init_set() {
    return NULL;
 }
 
-void empty_arcs(Arcs* e) {
+void empty_arcs(Arcs *e) {
    e->arcs = NULL;
 }
 
-void init_arcs(Arcs* e, int n) {
+void init_arcs(Arcs *e, int n) {
    int i; 
    empty_arcs(e);
 
@@ -45,12 +45,23 @@ int exist_vertex_set(int v, Set *a) {
    return 0;
 }
 
-int non_saturation_set(Set* a, Arcs* M) {
+int non_saturation_set(Set *a, Arcs *M) {
    int v;
    
    for ( ; a != NULL ; a = a->next) {
       v = a->vertex;
       if (M->arcs[0][v] < 0)
+         return v;
+   }
+   return -1;
+}
+
+int saturation_set(Set *a, Arcs *M) {
+   int v;
+
+   for ( ; a != NULL ; a = a->next) {
+      v = a->vertex;
+      if (M->arcs[0][v] >= 0)
          return v;
    }
    return -1;

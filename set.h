@@ -6,13 +6,13 @@
 
 typedef struct set {
    int vertex;
-   struct set* next;
+   struct set *next;
 } Set;
 
 // Semântica 1 - conjunto recíproco de arestas (se existe aresta uv, existe vu)
 // Semântica 2 - caminho (existe aresta apenas em uma direção - depende de um vértice inicial)
 typedef struct arcs {
-   int** arcs; 
+   int **arcs; 
 } Arcs;
 
 // Inicializa uma lista Set vazia
@@ -20,13 +20,13 @@ typedef struct arcs {
 Set* init_set();
 
 // limpa sujeiras da memória
-void empty_arcs(Arcs* e);
+void empty_arcs(Arcs *e);
 
 // n equivale a quantidade de nós
 // Índice das colunas indicam os vértices de uma extremidade da aresta
 // Linha e->arcs[0][] representa o vértice da outra extremidade da aresta
 // Linha e->arcs[1][] representa o peso da aresta
-void init_arcs(Arcs* e, int n);
+void init_arcs(Arcs *e, int n);
 
 // Insere um vértice na lista Set
 // X = insert_set(5, X)
@@ -39,10 +39,10 @@ void insert_arcs(int u, int v, int weight, Arcs *M);
 int exist_vertex_set(int v, Set *a);
 
 // Retorna -1 se o conjunto a é M-saturado ou um vértice livre maior ou igual a zero
-int non_saturation_set(Set* a, Arcs* M);
+int non_saturation_set(Set *a, Arcs *M);
 
-// Retorna o primeiro vértice M-saturado
-//int saturation_set(Set* a, Arcs* M);
+// Retorna o primeiro vértice M-saturado ou -1 caso não tenha nenhum
+int saturation_set(Set *a, Arcs *M);
 
 // Constrói o conjunto NS contendo os vizinhos de S
 //void builds_neighborhood_set(Set *S, Set *NS);
@@ -54,7 +54,7 @@ int non_saturation_set(Set* a, Arcs* M);
 //Set* subtraction_set(Set *NS, Set *T);
 
 // Retorna um conjunto de arcos que é resultado da diferença simétrica de M e P
-//Arcs* symmetric_difference_arcs(Arcs* M, Arcs* P);
+//Arcs* symmetric_difference_arcs(Arcs *M, Arcs *P);
 
 // Encontra um caminho aumentante ou NULL
 Arcs* augmenting_path(int y, Graph *P);
