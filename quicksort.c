@@ -32,3 +32,13 @@ void quicksort(Vertex* array, int p, int r) {
     quicksort(array, q + 1, r);
   }
 }
+
+void insertion_sort(Vertex* array, int size) {
+  int i;
+  int j;
+  for (i = 1 ; i < size ; i++) {
+    for (j = i ; array[j].degree < array[j-1].degree && j != 0 ; j--) {
+      swap(&array[j], &array[j - 1]);
+    }
+  }
+}

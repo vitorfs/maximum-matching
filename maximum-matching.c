@@ -148,12 +148,15 @@ Graph* maximal_matching(Graph* g) {
         m->arcs[i][j] = g->arcs[i][j];
 
   Vertex* v = (Vertex*) malloc(g->vertex_count * sizeof(Vertex));
-  //Vertex* v = NULL;
   get_ordered_vertex(m, v);
   
   int saturated[m->vertex_count];
   for (i = 0 ; i < m->vertex_count ; i++)
     saturated[i] = 0;
+
+  for (i = 0 ; i < m->vertex_count ; i++) {
+    m->vertex[i].degree = get_vertex_degree(m, i);
+  }
 
   int* adj;
   for (i = 0 ; i < m->vertex_count ; i++) {
@@ -167,7 +170,8 @@ Graph* maximal_matching(Graph* g) {
         
         for (j = 2 ; j <= adj[0] ; j++) {
           //if (get_vertex_degree(m, adj[j]) < get_vertex_degree(m, v2)) v2 = adj[j];
-          if (m->vertex[adj[j]].degree < m->vertex[v2].degree) v2 = adj[j];
+          if (m->vertex[adj[j]].degree < m->vertex[v2].degree) 
+            v2 = adj[j];
         }
         
         insert_arc(matching, v1, v2, m->arcs[v1][v2]);

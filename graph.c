@@ -6,7 +6,7 @@
 void empty_graph(Graph* g) {
   g->vertex_count = 0;
   g->arcs = NULL;
-  g->vertex = NULL;
+  //g->vertex = NULL;
 }
 
 void init_graph(Graph* g, int n) {
@@ -29,8 +29,8 @@ void free_graph(Graph* g) {
   int i;
 
   for (i = 0 ; i < g->vertex_count ; i++)
-	 free(g->arcs[i]);
-  free(g->vertex);
+    free(g->arcs[i]);
+  //free(g->vertex);
   free(g);
   g = NULL;
 }
@@ -39,8 +39,9 @@ int insert_arc(Graph* g, int a1, int a2, int weight) {
   if (a1 >= 0 && a1 < g->vertex_count && a2 >= 0 && a2 < g->vertex_count && g->arcs[a1][a2] == 0) {
     g->arcs[a1][a2] = weight;
     g->arcs[a2][a1] = weight;
-    g->vertex[a1].degree++;
-    g->vertex[a2].degree++;
+    //g->vertex[a1].degree++;
+    //g->vertex[a2].degree++;
+    //printf("a1 %d %d\n\n", a1, g->vertex[a1].degree);
     return 0;
   }
   return -1;
@@ -52,8 +53,8 @@ int remove_arc(Graph* g, int a1, int a2) {
     weight = g->arcs[a1][a2];
     g->arcs[a1][a2] = 0;
     g->arcs[a2][a1] = 0;
-    g->vertex[a1].degree--;
-    g->vertex[a2].degree--;
+    //g->vertex[a1].degree--;
+    //g->vertex[a2].degree--;
   }
   return weight;
 }
@@ -101,9 +102,18 @@ void get_ordered_vertex(Graph* g, Vertex* v) {
   for (i = 0 ; i < g->vertex_count ; i++) {
     v[i].vertex = i;
     v[i].degree = get_vertex_degree(g, i);
+    //v[i].degree = g->vertex[i].degree;
   }
   
   quicksort(v, 0, g->vertex_count - 1);
+  //insertion_sort(v, g->vertex_count);
+  /*for (i = 0 ; i < g->vertex_count ; i++) {
+    printf("[%d (%d)]", v[i].vertex, v[i].degree);
+  }
+  printf("\n");
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    printf("[%d (%d)]", g->vertex[i].vertex, g->vertex[i].degree);
+  }*/
 }
 
 void insert_vertex(Graph* g, int v) {
