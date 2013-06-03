@@ -40,17 +40,17 @@ void free_arcs(Arcs *e);
 void zero_arcs(Arcs *e);
 
 // Insere um vértice na lista Set
-// X = insert_set(5, X)
+// caso o mesmo já não tenha sido inserido
 Set* insert_set(int v , Set *old);
 
 // Insere uma aresta em M
 void insert_arcs(int u, int v, int weight, Arcs *M);
 
-// Remove uma aresta em M
-void remove_arcs(int u, int v, Arcs *M);
-
 // Remove um elemento do conjunto Set *a
 void remove_set(int v, Set *a);
+
+// Remove uma aresta em M
+void remove_arcs(int u, int v, Arcs *M);
 
 // Retorna 1 se existe e 0 se não existe o vértice na lista
 int exist_vertex_set(int v, Set *a);
@@ -65,10 +65,13 @@ int saturation_set(Set *a, Arcs *M);
 void builds_neighborhood_set(Set *S, Set *NS, Graph *g);
 
 // Retorna 1 se os conjuntos forem iguais e 0 se forem diferentes
-//int compare_set(Set *NS, Set *T);
+// NS sempre será maior que T
+// então marca-se todos os elementos de T no vetor
+// e verifica se NS contém algum elemento que não foi marcado
+int compare_set(Set *NS, Set *T, Graph *g);
 
 // Retorna o primeiro conjunto menos o segundo
-//Set* subtraction_set(Set *NS, Set *T);
+Set* subtraction_set(Set *NS, Set *T, Graph *g);
 
 // Retorna um conjunto de arcos que é resultado da diferença simétrica de M e P
 // P usa da semântica 2 (caminho) e M da semântica 1 (conjunto de arcos)

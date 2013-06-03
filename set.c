@@ -55,7 +55,6 @@ void zero_arcs(Arcs *e) {
       e->arcs[1][i] = -1;
 }
 
-// Deve garantir que o elemento não exista antes de inserir
 Set* insert_set(int v , Set *old) {
    Set *temp = old;
 
@@ -140,6 +139,20 @@ void builds_neighborhood_set(Set *S, Set *NS, Graph *g) {
             insert_set(j, NS);
       }
    }
+}
+
+// Se número de elementos em NS e T forem diferente já descarta
+int compare_set(Set *NS, Set *T, Graph *g) {
+   int *t = (int*) calloc(g->vertex_count * sizeof(int));
+
+   for ( ; T != NULL ; T = T->next)
+      t[NS->vertex] = 1;
+
+   for ( ; NS != NULL ; NS = NS->next)
+      if(!t[T->vertex])
+         return 0;
+
+   return 1;
 }
 
 void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
