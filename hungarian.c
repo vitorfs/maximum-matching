@@ -33,8 +33,8 @@ Arcs* hungarian(Graph *g) {
       free_set(NS);
       builds_neighborhood_set(S, NS, g);
 
-      while (!compare_set(NS, T)) {
-         y = saturation_set(subtraction_set(NS, T), M);
+      while (!compare_set(NS, T, g)) {
+         y = saturation_set(subtraction_set(NS, T, g), M);
          if (y < 0) break;
 
          insert_set(M->arcs[0][y], S);
@@ -42,15 +42,15 @@ Arcs* hungarian(Graph *g) {
 
          builds_neighborhood_set(S, NS, g);
       }
-      if (compare_set(NS, T))
+      if (compare_set(NS, T, g))
          return M;
          //return S;
       else {
          Arcs* P;
          P = init_arcs(g->vertex_count);
-         y = non_saturation_set(subtraction_set(NS, T), M);
+         y = non_saturation_set(subtraction_set(NS, T, g), M);
 
-         P = augmenting_path(y, g);
+         P = augmenting_path(u, y, M, g);
          M = symmetric_difference_arcs(y, P, M);
       }
 

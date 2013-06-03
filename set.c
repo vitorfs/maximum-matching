@@ -1,3 +1,4 @@
+#include "graph.h"
 #include "set.h"
 
 Set* init_set() {
@@ -57,12 +58,13 @@ void zero_arcs(Arcs *e) {
 
 Set* insert_set(int v , Set *old) {
    Set *temp = old;
+   Set *new;
 
    for ( ; temp != NULL ; temp = temp->next)
       if (temp->vertex == v)
          return old;
 
-   Set *new = (Set*) malloc(sizeof(Set));
+   new = (Set*) malloc(sizeof(Set));
    new->vertex = v;
    new->next = old;
 
@@ -177,6 +179,44 @@ void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
          remove_arcs(y, P->arcs[0][y], M);
       y = P->arcs[0][y];
    }
+}
+
+Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
+   int i;
+   int z;
+   Arcs *P = init_arcs(g->vertex_count);
+
+   P->arcs[1][y] = 1;
+   for ( ; ; ) {
+      // Procura vértices incidentes em y
+      for (z = -1 ; i < g->vertex_count ; i++)
+         if (g->arcs[y][i] > 0 && P->arcs[1][i] != 1)
+            z = i;
+
+      // Caso não encontre vértices incidentes em y, PARE.
+      // Ou seja, z permanece com o valor definido acima
+      if (z == -1)
+         break;
+
+      // Se o vértice encontrado é o próprio vértice livre u
+      // retorna a aresta, pois é um caminho aumentante
+      if (z == u) {
+         P->arcs[0][y] = z;
+         return P;
+      // se não, se vértice z é M-saturado, faça:
+      } else if (M->arcs[0][z] >= 0) {
+         P->arcs[0][y] = z;   // z é o próximo salto de y
+         P->arcs[1][z] = 1;   // marca z como visitado
+         y = M->arcs[0][z];   // y recebe o vértice vizinho de z em M
+         P->arcs[0][z] = y;   // y é o próximo salto de z
+         P->arcs[1][y] = 1;   // marca y como visitado
+
+         i = 0;   // zera i para recomeçar a busca a partir do novo y
+      }
+      // caso contrário procure outro vértice a partir de i
+   }
+
+   return NULL;
 }
 
 void bipartite_define_set(int v, Graph *g, Set *X, Set *Y) {

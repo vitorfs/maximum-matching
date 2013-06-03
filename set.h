@@ -78,7 +78,7 @@ Set* subtraction_set(Set *NS, Set *T, Graph *g);
 void symmetric_difference_arcs(int y, Arcs *P, Arcs *M);
 
 // Encontra um caminho aumentante ou NULL
-Arcs* augmenting_path(int y, Graph *P);
+Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g);
 
 // Dado um grafo g bipartido e um vértice v, constrói dois conjuntos de vértices X e Y
 void bipartite_define_set(int v, Graph *g, Set *X, Set *Y);
