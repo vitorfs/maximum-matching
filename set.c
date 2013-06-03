@@ -143,16 +143,30 @@ void builds_neighborhood_set(Set *S, Set *NS, Graph *g) {
 
 // Se número de elementos em NS e T forem diferente já descarta
 int compare_set(Set *NS, Set *T, Graph *g) {
-   int *t = (int*) calloc(g->vertex_count * sizeof(int));
+   int *t = (int*) calloc(g->vertex_count, sizeof(int));
 
    for ( ; T != NULL ; T = T->next)
-      t[NS->vertex] = 1;
+      t[T->vertex] = 1;
 
    for ( ; NS != NULL ; NS = NS->next)
-      if(!t[T->vertex])
+      if(!t[NS->vertex])
          return 0;
 
    return 1;
+}
+
+Set* subtraction_set(Set * NS, Set *T, Graph *g) {
+   int *t = (int*) calloc(g->vertex_count, sizeof(int));
+   Set *temp = init_set();
+
+   for ( ; T != NULL ; T = T->next)
+      t[T->vertex] = 1;
+
+   for ( ; NS != NULL ; NS = NS->next)
+      if(!t[NS->vertex])
+         temp = insert_set(NS->vertex, NS);
+
+   return temp;
 }
 
 void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
