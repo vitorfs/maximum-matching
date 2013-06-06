@@ -1,5 +1,6 @@
 #include "graph.h"
 #include "set.h"
+#include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -221,24 +222,6 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
    return NULL;
 }
 
-void bipartite_define_set(int v, Graph *g, Set *X, Set *Y) {
-   int i, j;
-   // Estrutura para auxiliar a busca por profundidade
-   // Evita que vértices sejam inseridos mais de uma vez
-   // Otimiza o processo se comparada com o uso da função exist_vertex_set()
-   int aux[g->vertex_count];
-
-   for (i = 0 ; i < g->vertex_count ; i++)
-      aux[i] = 0;
-  
-   X = insert_set(v, X);
-   aux[v] = 1;
-  
-   for (j = 0 ; j < g->vertex_count ; j++)
-      if (g->arcs[v][j] > 0 && aux[v] == 0)
-         bipartite_define_set(j, g, Y, X);
-}
-
 void print_set(Set* s) {
   if (s == NULL) {
     printf("O conjunto estah nulo.\n");
@@ -248,5 +231,40 @@ void print_set(Set* s) {
       printf("%d, ", s->vertex);
       s = s->next;
     }
+  }
+}
+
+void bipartite(Graph* g, Bipartite_Graph* bg, int init_vertex) {
+  Stack* open = (Stack*) malloc(sizeof(Stack));
+  int* visited = (int*) calloc(g->vertex_count, sizeof(int));
+  int* partition = (int*) malloc(g->vertex_count * sizeof(int));
+
+  int i;
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    partition[i] = -1;
+  }
+
+  push(open, init_vertex);
+  partition[init_vertex] = 0;
+
+  while (!empty_stack(open)) {
+    int v = pop(open);
+    for (i = 0 ; i < g->vertex_count ; i++) {
+      if (g->arcs[v][i] > 0 && visited[i] == 0) {
+        push(open, i);
+        partition[i] = (partition[v] + 1) % 2;
+      }
+    }
+    visited[v] = 1;
+  }
+
+  bg->X = init_set();
+  bg->Y = init_set();
+
+  for (i = 0 ; i < g->vertex_count ; i++) {
+    if (partition[i] == 0)
+      bg->X = insert_set(i, bg->X);
+    if (partition[i] == 1)
+      bg->Y = insert_set(i, bg->Y);
   }
 }

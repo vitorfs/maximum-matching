@@ -16,6 +16,11 @@ typedef struct arcs {
    int **arcs; 
 } Arcs;
 
+typedef struct {
+  Set* X;
+  Set* Y;
+} Bipartite_Graph;
+
 // Inicializa uma lista Set vazia
 // Set* X = init_set();
 Set* init_set();
@@ -85,4 +90,5 @@ void bipartite_define_set(int v, Graph *g, Set *X, Set *Y);
 
 void print_set(Set* s);
 
+void bipartite(Graph* g, Bipartite_Graph* bg, int init_vertex);
 #endif

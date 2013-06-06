@@ -15,7 +15,7 @@ Arcs* hungarian(Graph *g) {
 
    X = init_set();
    Y = init_set();
-   bipartite_define_set(0, g, X, Y);
+   //bipartite_define_set(0, g, X, Y);
 
    S = init_set();
    T = init_set();
@@ -99,16 +99,13 @@ int main(int argc, char* argv[]) {
     printf("%d %d\n", matching->arcs[0][i], i);  
   }*/
 
-  Set* X;
-  Set* Y;
+  Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
+  
+  bipartite(graph, bg, 0);
 
-  X = init_set();
-  Y = init_set();
-  X = (Set*) malloc(sizeof(Set));
-  bipartite_define_set(0, graph, X, Y);
-
-  print_set(X);
-  print_set(Y);
+  print_set(bg->X);
+  printf("\n");
+  print_set(bg->Y);
 
   return 0;
 }
