@@ -5,6 +5,15 @@
 
 int PRINT_MATRIX = 0;
 
+void print_arcs(Arcs* a) {
+  printf("----------\n");
+  int i;
+  for (i = 0 ; i < a->n ; i++) {
+    printf("%d %d\n", i, a->arcs[0][i]);  
+  }
+  printf("----------\n");
+}
+
 // Recebe um grafo g
 // Retorna um emparelhamento maximal
 // Deve ser reexecutado para todo vértice não M-saturado
@@ -21,27 +30,46 @@ Arcs* hungarian(Graph *g) {
    NS = init_set();
 
    M = init_arcs(g->vertex_count);
-   for (i = 0 ; i < g->vertex_count ; i++)
+
+   print_arcs(M); //**********************
+
+   int break_loop = 0;
+   for (i = 0 ; i < g->vertex_count ; i++) {
       for (j = i ; j < g->vertex_count ; j++)
-         if (g->arcs[i][j] > 0)
+         if (g->arcs[i][j] > 0) {
             insert_arcs(i, j, g->arcs[i][j], M);
+            break_loop = 1; 
+            break;
+         }
+      if (break_loop) 
+        break;
+   }
 
+   print_arcs(M); //**************************
    u = non_saturation_set(bg->X, M);
+
+   printf("\nX: ");
+   print_set(bg->X); //**************************
+
+   printf("\n%d\n", u); //************************
+
    while (u >= 0) {
-
       int y;
-
-      insert_set(u, S);
+      S = insert_set(u, S);
+      printf("\nS: ");
+      print_set(S); //**************************
       free_set(T);
       free_set(NS);
+      printf("\nNS: ");
+      print_set(NS); //**************************
       builds_neighborhood_set(S, NS, g);
 
       while (!compare_set(NS, T, g)) {
          y = saturation_set(subtraction_set(NS, T, g), M);
          if (y < 0) break;
 
-         insert_set(M->arcs[0][y], S);
-         insert_set(y, T);
+         S = insert_set(M->arcs[0][y], S);
+         T = insert_set(y, T);
 
          builds_neighborhood_set(S, NS, g);
       }
@@ -89,14 +117,7 @@ int main(int argc, char* argv[]) {
   if (PRINT_MATRIX == 1) print_graph(graph);
 
   Arcs* matching = (Arcs*) malloc(sizeof(Arcs));
-
   matching = hungarian(graph);
-
-  int i,j;
-
-  for (i = 0 ; i < matching->n ; i++) {
-    printf("%d %d\n", matching->arcs[0][i], i);  
-  }
-
+  //print_arcs(matching);
   return 0;
 }

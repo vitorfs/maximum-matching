@@ -141,7 +141,7 @@ void builds_neighborhood_set(Set *S, Set *NS, Graph *g) {
       v = S->vertex;
       for (j = 0 ; j < g->vertex_count ; j++) {
          if (g->arcs[v][j] > 0)
-            insert_set(j, NS);
+            NS = insert_set(j, NS);
       }
    }
 }

@@ -9,6 +9,11 @@ typedef struct set {
    struct set *next;
 } Set;
 
+typedef struct {
+  int nodes;
+  Set* first;
+} Header;
+
 // Semântica 1 - conjunto recíproco de arestas (se existe aresta uv, existe vu)
 // Semântica 2 - caminho (existe aresta apenas em uma direção - depende de um vértice inicial)
 typedef struct arcs {
