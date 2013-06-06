@@ -10,12 +10,11 @@ int PRINT_MATRIX = 0;
 // Deve ser reexecutado para todo vértice não M-saturado
 Arcs* hungarian(Graph *g) {
    int i, j, u;
-   Set *S, *T, *NS, *X, *Y;
+   Set *S, *T, *NS;
    Arcs *M;
 
-   X = init_set();
-   Y = init_set();
-   //bipartite_define_set(0, g, X, Y);
+   Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
+   bipartite(g, bg, 0);
 
    S = init_set();
    T = init_set();
@@ -27,7 +26,7 @@ Arcs* hungarian(Graph *g) {
          if (g->arcs[i][j] > 0)
             insert_arcs(i, j, g->arcs[i][j], M);
 
-   u = non_saturation_set(X, M);
+   u = non_saturation_set(bg->X, M);
    while (u >= 0) {
 
       int y;
@@ -58,7 +57,7 @@ Arcs* hungarian(Graph *g) {
          symmetric_difference_arcs(y, P, M);
       }
 
-      u = non_saturation_set(X, M);
+      u = non_saturation_set(bg->X, M);
    }
 
    return M;
@@ -91,21 +90,13 @@ int main(int argc, char* argv[]) {
 
   Arcs* matching = (Arcs*) malloc(sizeof(Arcs));
 
-  /*matching = hungarian(graph);
+  matching = hungarian(graph);
 
   int i,j;
 
   for (i = 0 ; i < matching->n ; i++) {
     printf("%d %d\n", matching->arcs[0][i], i);  
-  }*/
-
-  Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
-  
-  bipartite(graph, bg, 0);
-
-  print_set(bg->X);
-  printf("\n");
-  print_set(bg->Y);
+  }
 
   return 0;
 }
