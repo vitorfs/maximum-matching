@@ -1,5 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "graph.h"
 #include "set.h"
+
+int PRINT_MATRIX = 0;
 
 // Recebe um grafo g
 // Retorna um emparelhamento maximal
@@ -11,7 +15,7 @@ Arcs* hungarian(Graph *g) {
 
    X = init_set();
    Y = init_set();
-   bipartite_define_set(0, g, X, Y)
+   bipartite_define_set(0, g, X, Y);
 
    S = init_set();
    T = init_set();
@@ -21,7 +25,7 @@ Arcs* hungarian(Graph *g) {
    for (i = 0 ; i < g->vertex_count ; i++)
       for (j = i ; j < g->vertex_count ; j++)
          if (g->arcs[i][j] > 0)
-            insert_arcs(i, j, M);
+            insert_arcs(i, j, g->arcs[i][j], M);
 
    u = non_saturation_set(X, M);
    while (u >= 0) {
@@ -51,11 +55,60 @@ Arcs* hungarian(Graph *g) {
          y = non_saturation_set(subtraction_set(NS, T, g), M);
 
          P = augmenting_path(u, y, M, g);
-         M = symmetric_difference_arcs(y, P, M);
+         symmetric_difference_arcs(y, P, M);
       }
 
       u = non_saturation_set(X, M);
    }
 
    return M;
+}
+
+
+int main(int argc, char* argv[]) {
+  char* filename;
+  int read_status = -1;
+  
+  Graph* graph = (Graph*) malloc(sizeof(Graph));
+
+  filename = (char*) malloc(128 * sizeof(char));
+  
+  if (argc > 1) {
+    filename = argv[1];
+    read_status = read_graph(filename, graph);
+    if (read_status == -1) {
+      printf("File doesn't exist.\n");
+    }
+  }
+
+  if (argc > 2) {
+    if (strcmp(argv[2], "-p") == 0) {
+      PRINT_MATRIX = 1;
+    }
+  }
+
+  if (PRINT_MATRIX == 1) print_graph(graph);
+
+  Arcs* matching = (Arcs*) malloc(sizeof(Arcs));
+
+  /*matching = hungarian(graph);
+
+  int i,j;
+
+  for (i = 0 ; i < matching->n ; i++) {
+    printf("%d %d\n", matching->arcs[0][i], i);  
+  }*/
+
+  Set* X;
+  Set* Y;
+
+  X = init_set();
+  Y = init_set();
+  X = (Set*) malloc(sizeof(Set));
+  bipartite_define_set(0, graph, X, Y);
+
+  print_set(X);
+  print_set(Y);
+
+  return 0;
 }

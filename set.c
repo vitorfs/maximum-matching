@@ -1,5 +1,7 @@
 #include "graph.h"
 #include "set.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 Set* init_set() {
    return NULL;
@@ -229,10 +231,22 @@ void bipartite_define_set(int v, Graph *g, Set *X, Set *Y) {
    for (i = 0 ; i < g->vertex_count ; i++)
       aux[i] = 0;
   
-   insert_set(v, X);
+   X = insert_set(v, X);
    aux[v] = 1;
   
    for (j = 0 ; j < g->vertex_count ; j++)
       if (g->arcs[v][j] > 0 && aux[v] == 0)
          bipartite_define_set(j, g, Y, X);
+}
+
+void print_set(Set* s) {
+  if (s == NULL) {
+    printf("O conjunto estah nulo.\n");
+  }
+  else {
+    while (s != NULL) {
+      printf("%d, ", s->vertex);
+      s = s->next;
+    }
+  }
 }

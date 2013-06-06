@@ -83,4 +83,6 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g);
 // Dado um grafo g bipartido e um vértice v, constrói dois conjuntos de vértices X e Y
 void bipartite_define_set(int v, Graph *g, Set *X, Set *Y);
 
+void print_set(Set* s);
+
 #endif

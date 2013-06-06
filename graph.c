@@ -187,3 +187,64 @@ void print_adjacency(int* a) {
   printf("\n");
 }
 
+int read_graph(char* filename, Graph* g) {
+  FILE *PTRFILE;
+
+  PTRFILE = fopen(filename, "rt");
+  
+  if (PTRFILE == NULL) {
+    return -1;
+  }
+  
+  else {
+    empty_graph(g);
+  
+    char line[80];
+    char str_aux[80];
+    int i;
+    int j;
+    int k;
+    int arc_1;
+    int arc_2;
+    int weight = 0;
+    
+    for (i = 0 ; fgets(line, 80, PTRFILE) != NULL ; i++) {
+      if (i == 0) {
+        insert_vertex(g, atoi(line));
+      }
+
+      else {
+        for (j = 0, k = 0 ; j < 80 && line[j] != 32 && line[j] != '\0' ; j++, k++) 
+          str_aux[k] = line[j];
+
+        str_aux[k] = '\0';
+        arc_1 = atoi(str_aux);
+        
+        j = j + 1;
+        str_aux[0] = '\0';
+
+        for (k = 0 ; j < 80 && line[j] != 32 && line[j] != '\0' ; j++, k++)
+          str_aux[k] = line[j];
+
+        str_aux[k] = '\0';
+        arc_2 = atoi(str_aux);
+        
+        j = j + 1;
+        str_aux[0] = '\0';
+
+        for (k = 0 ; j < 80 && line[j] != 32 && line[j] != '\0' ; j++, k++)
+          str_aux[k] = line[j];
+
+        str_aux[k] = '\0';
+        weight = atoi(str_aux);
+
+        if (weight == 0) weight = 1;
+
+        insert_arc(g, arc_1, arc_2, weight);
+      }
+
+    }
+
+  }
+  return 0;
+}
