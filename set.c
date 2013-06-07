@@ -8,6 +8,11 @@ Set* init_set() {
    return NULL;
 }
 
+void init_header_set(HeaderSet *head) {
+   head->nodes = 0;
+   head->first = init_set();
+}
+
 void empty_arcs(Arcs *e) {
    e->arcs = NULL;
 }
@@ -33,12 +38,19 @@ Arcs* init_arcs(int n) {
 
 void free_set(Set *a) {
    Set *temp;
-
+ 
    while (a != NULL) {
       temp = a;
       a = a->next;
       free(temp);
    }
+}
+
+void free_header_set(HeaderSet *head) {
+   free_set(head->first);
+   head->first = init_set();
+
+   free(head);
 }
 
 void free_arcs(Arcs *e) {
@@ -50,6 +62,11 @@ void free_arcs(Arcs *e) {
    free(e);
 }
 
+void zero_header_set(HeaderSet *head) {
+   free_set(head->first);
+   init_header_set(head);
+}
+
 void zero_arcs(Arcs *e) {
    int i;
 
@@ -59,19 +76,21 @@ void zero_arcs(Arcs *e) {
       e->arcs[1][i] = -1;
 }
 
-Set* insert_set(int v , Set *old) {
-   Set *temp = old;
+void insert_header_set(int v, HeaderSet *head) {
+   Set *temp = head->first;
    Set *new;
 
-   for ( ; temp != NULL ; temp = temp->next)
+   while (temp != NULL) {
       if (temp->vertex == v)
-         return old;
+         return;
+      temp = temp->next;
+   }
 
    new = (Set*) malloc(sizeof(Set));
    new->vertex = v;
-   new->next = old;
-
-   return new;
+   new->next = head->first;
+   head->first = new;
+   head->nodes++;
 }
 
 void insert_arcs(int u, int v, int weight, Arcs *M) {
@@ -81,20 +100,30 @@ void insert_arcs(int u, int v, int weight, Arcs *M) {
    M->arcs[1][v] = weight;
 }
 
-void remove_set(int v, Set *a) {
+void remove_header_set(int v, HeaderSet *head) {
+   Set *a = head->first;
    Set *temp = init_set();
 
+   // Caso onde o vértice a ser removido é o primeiro elemento
    if (a->vertex == v) {
       temp = a;
       a = a->next;
       free(temp);
-   }
-   for ( ; a != NULL ; a = a->next)
-      if (a->next->vertex == v) {
-         temp = a->next;
-         a->next = a->next->next;
-         free(temp);
+      // Sendo o primeiro elemento deve-se alterar o valor de head->first
+      head->first = a;
+      head->nodes--;
+   } else {
+      while(a != NULL) {
+         if (a->next->vertex == v) {
+            temp = a->next;
+            a->next = a->next->next;
+            free(temp);
+            head->nodes--;
+            break; // Caso encontre o vértice, pode interromper a busca (desempenho)
+         }
+         a = a->next;
       }
+   }
 }
 
 void remove_arcs(int u, int v, Arcs *M) {
@@ -104,7 +133,9 @@ void remove_arcs(int u, int v, Arcs *M) {
    M->arcs[1][v] = -1;
 }
 
-int exist_vertex_set(int v, Set *a) {
+int exist_vertex_header_set(int v, HeaderSet *head) {
+   Set *a = head->first;
+
    for ( ; a != NULL; a = a->next)
       if (a->vertex == v)
          return 1;
@@ -112,66 +143,90 @@ int exist_vertex_set(int v, Set *a) {
    return 0;
 }
 
-int non_saturation_set(Set *a, Arcs *M) {
+int non_saturation_set(HeaderSet *head, Arcs *M) {
+   Set *a = head->first;
    int v;
    
-   for ( ; a != NULL ; a = a->next) {
+   while (a != NULL) {
       v = a->vertex;
       if (M->arcs[0][v] < 0)
          return v;
+      a = a->next;
    }
    return -1;
 }
 
-int saturation_set(Set *a, Arcs *M) {
+int saturation_set(HeaderSet *head, Arcs *M) {
+   Set *a = head->first;
    int v;
 
-   for ( ; a != NULL ; a = a->next) {
+   while (a != NULL) {
       v = a->vertex;
       if (M->arcs[0][v] >= 0)
          return v;
+      a = a->next;
    }
    return -1;
 }
 
-void builds_neighborhood_set(Set *S, Set *NS, Graph *g) {
+void builds_neighborhood_header_set(HeaderSet *S, HeaderSet *NS, Graph *g) {
+   Set *s_list = S->first;
    int v, j;
    
-   for ( ; S != NULL ; S = S->next) {
-      v = S->vertex;
+   while (s_list != NULL) {
+      v = s_list->vertex;
       for (j = 0 ; j < g->vertex_count ; j++) {
          if (g->arcs[v][j] > 0)
-            NS = insert_set(j, NS);
+            insert_header_set(j, NS);
       }
+      s_list = s_list->next;
    }
 }
 
-// Se número de elementos em NS e T forem diferente já descarta
-int compare_set(Set *NS, Set *T, Graph *g) {
+int compare_header_set(HeaderSet *NS, HeaderSet *T, Graph *g) {
+   // Se o número de elementos for diferente o conjunto não é igual (desempenho)
+   if (NS->nodes != T->nodes)
+      return 0;
+
+   // Vetor auxiliar para evitar que comparação de duas lista leve O(nm)
    int *t = (int*) calloc(g->vertex_count, sizeof(int));
+   Set *ns_list = NS->first;
+   Set *t_list = T->first;
 
-   for ( ; T != NULL ; T = T->next)
-      t[T->vertex] = 1;
+   while (t_list != NULL) {
+      t[t_list->vertex] = 1;
+      t_list = t_list->next;
+   }
 
-   for ( ; NS != NULL ; NS = NS->next)
-      if(!t[NS->vertex])
+   while (ns_list != NULL) {
+      if(!t[ns_list->vertex])
          return 0;
+      ns_list = ns_list->next;
+   }
 
    return 1;
 }
 
-Set* subtraction_set(Set * NS, Set *T, Graph *g) {
+HeaderSet* subtraction_set(HeaderSet *NS, HeaderSet *T, Graph *g) {
+   // Vetor auxiliar para evitar que comparação de duas lista leve O(nm)
    int *t = (int*) calloc(g->vertex_count, sizeof(int));
-   Set *temp = init_set();
+   Set *ns_list = NS->first;
+   Set *t_list = T->first;
+   HeaderSet *Subtraction;
+   init_header_set(Subtraction);
 
-   for ( ; T != NULL ; T = T->next)
-      t[T->vertex] = 1;
+   while (t_list != NULL) {
+      t[t_list->vertex] = 1;
+      t_list = t_list->next;
+   }
 
-   for ( ; NS != NULL ; NS = NS->next)
-      if(!t[NS->vertex])
-         temp = insert_set(NS->vertex, NS);
+   while (ns_list != NULL) {
+      if(!t[ns_list->vertex])
+         insert_header_set(ns_list->vertex, Subtraction);
+      ns_list = ns_list->next;
+   }
 
-   return temp;
+   return Subtraction;
 }
 
 void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
@@ -223,17 +278,17 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
 }
 
 void print_set(Set* s) {
-  if (s == NULL) {
-    printf("O conjunto estah nulo.\n");
-  }
-  else {
-    while (s != NULL) {
-      printf("%d, ", s->vertex);
-      s = s->next;
-    }
-  }
+   if (s == NULL)
+      printf("O conjunto estah nulo.\n");
+   else {
+      while (s != NULL) {
+         printf("%d, ", s->vertex);
+         s = s->next;
+      }
+   }
 }
 
+/*
 void bipartite(Graph* g, Bipartite_Graph* bg, int init_vertex) {
   Stack* open = (Stack*) malloc(sizeof(Stack));
   int* visited = (int*) calloc(g->vertex_count, sizeof(int));
@@ -268,3 +323,4 @@ void bipartite(Graph* g, Bipartite_Graph* bg, int init_vertex) {
       bg->Y = insert_set(i, bg->Y);
   }
 }
+*/

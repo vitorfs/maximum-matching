@@ -19,15 +19,15 @@ void print_arcs(Arcs* a) {
 // Deve ser reexecutado para todo vértice não M-saturado
 Arcs* hungarian(Graph *g) {
    int i, j, u;
-   Set *S, *T, *NS;
+   HeaderSet *S, *T, *NS;
    Arcs *M;
 
    Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
    bipartite(g, bg, 0);
 
-   S = init_set();
-   T = init_set();
-   NS = init_set();
+   init_header_set(S);
+   init_header_set(T);
+   init_header_set(NS);
 
    M = init_arcs(g->vertex_count);
 
@@ -46,46 +46,46 @@ Arcs* hungarian(Graph *g) {
    }
 
    print_arcs(M); //**************************
-   u = non_saturation_set(bg->X, M);
+   u = non_saturation_header_set(bg->X, M);
 
-   printf("\nX: ");
+   printf("\nX: "); //**************************
    print_set(bg->X); //**************************
 
-   printf("\n%d\n", u); //************************
+   printf("\n%d\n", u); //**************************
 
    while (u >= 0) {
       int y;
-      S = insert_set(u, S);
-      printf("\nS: ");
-      print_set(S); //**************************
-      free_set(T);
-      free_set(NS);
-      printf("\nNS: ");
-      print_set(NS); //**************************
-      builds_neighborhood_set(S, NS, g);
+      insert_header_set(u, S);
+      printf("\nS: "); //**************************
+      print_set(S->first); //**************************
+      zero_header_set(T);
+      zero_header_set(NS);
+      printf("\nNS: "); //**************************
+      print_set(NS->first); //**************************
+      builds_neighborhood_header_set(S, NS, g);
 
-      while (!compare_set(NS, T, g)) {
-         y = saturation_set(subtraction_set(NS, T, g), M);
+      while (!compare_header_set(NS, T, g)) {
+         y = saturation_header_set(subtraction_set(NS, T, g), M);
          if (y < 0) break;
 
-         S = insert_set(M->arcs[0][y], S);
-         T = insert_set(y, T);
+         insert_header_set(M->arcs[0][y], S);
+         insert_header_set(y, T);
 
-         builds_neighborhood_set(S, NS, g);
+         builds_neighborhood_header_set(S, NS, g);
       }
-      if (compare_set(NS, T, g))
+      if (compare_header_set(NS, T, g))
          return M;
          //return S;
       else {
          Arcs* P;
          P = init_arcs(g->vertex_count);
-         y = non_saturation_set(subtraction_set(NS, T, g), M);
+         y = non_saturation_header_set(subtraction_set(NS, T, g), M);
 
          P = augmenting_path(u, y, M, g);
          symmetric_difference_arcs(y, P, M);
       }
 
-      u = non_saturation_set(bg->X, M);
+      u = non_saturation_header_set(bg->X, M);
    }
 
    return M;
