@@ -3,8 +3,6 @@
 #include "graph.h"
 #include "set.h"
 
-int PRINT_MATRIX = 0;
-
 void print_arcs(Arcs* a) {
   printf("----------\n");
   int i;
@@ -122,35 +120,4 @@ Arcs* hungarian(Graph *g) {
    }
 
    return M;
-}
-
-
-int main(int argc, char* argv[]) {
-  char* filename;
-  int read_status = -1;
-
-  Graph* graph = (Graph*) malloc(sizeof(Graph));
-
-  filename = (char*) malloc(128 * sizeof(char));
-  
-  if (argc > 1) {
-    filename = argv[1];
-    read_status = read_graph(filename, graph);
-    if (read_status == -1) {
-      printf("File doesn't exist.\n");
-    }
-  }
-
-  if (argc > 2) {
-    if (strcmp(argv[2], "-p") == 0) {
-      PRINT_MATRIX = 1;
-    }
-  }
-
-  if (PRINT_MATRIX == 1) print_graph(graph);
-
-  Arcs* matching = (Arcs*) malloc(sizeof(Arcs));
-  matching = hungarian(graph);
-  //print_arcs(matching);
-  return 0;
 }
