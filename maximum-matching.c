@@ -22,7 +22,6 @@
 #include <string.h>
 #include "graph.h"
 
-int PRINT_MATRIX = 0;
 
 /*
  * This function has the job to print the matching result set from a graph g
@@ -30,8 +29,6 @@ int PRINT_MATRIX = 0;
 void print_matching(Graph* g) {
   int i, j;
   int arc_count = 0;
-
-  if (PRINT_MATRIX == 1) print_graph(g);
 
   printf("G = (V, A)\n");
   printf("V = {");
@@ -119,52 +116,3 @@ Graph* maximal_matching(Graph* g) {
   return matching;
 }
 
-/*
- * The main program optionally accepts one argv that describes the filename
- * for converting the graph to the working data structure
- */
-int main(int argc, char* argv[]) {
-  char* filename;
-  int read_status = -1;
-  
-  Graph* graph = (Graph*) malloc(sizeof(Graph));
-  Graph* gmatching = (Graph*) malloc(sizeof(Graph));
-
-  filename = (char*) malloc(128 * sizeof(char));
-  
-  if (argc > 1) {
-    filename = argv[1];
-    read_status = read_graph(filename, graph);
-    if (read_status == -1) {
-      printf("File doesn't exist.\n");
-    }
-  }
-
-  if (argc > 2) {
-    if (strcmp(argv[2], "-p") == 0) {
-      PRINT_MATRIX = 1;
-    }
-  }
-
-  if (read_status == -1) {
-    printf("Type the filename or 'exit' to quit the program.\n");
-    do {
-      scanf("%128s", filename);
-      if (strcmp(filename, "exit") == 0) {
-        return 0;
-      }
-      read_status = read_graph(filename, graph);
-      if (read_status == -1) {
-        printf("File doesns't exist.\n");
-      }
-    } while (read_status == -1);
-
-  }
-
-  if (PRINT_MATRIX == 1) print_graph(graph);
-
-  gmatching = maximal_matching(graph);
-  print_matching(gmatching);
-
-  return 0;
-}
