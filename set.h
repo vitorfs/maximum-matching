@@ -91,7 +91,7 @@ void builds_neighborhood_header_set(HeaderSet *S, HeaderSet *NS, Graph *g);
 int compare_header_set(HeaderSet *NS, HeaderSet *T, Graph *g);
 
 // Retorna o primeiro conjunto menos o segundo
-HeaderSet* subtraction_set(HeaderSet *NS, HeaderSet *T, Graph *g);
+HeaderSet* subtraction_header_set(HeaderSet *NS, HeaderSet *T, Graph *g);
 
 // Retorna um conjunto de arcos que é resultado da diferença simétrica de M e P
 // P usa da semântica 2 (caminho) e M da semântica 1 (conjunto de arcos)
@@ -105,8 +105,8 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g);
 void print_set(Set* s);
 
 // Dado um grafo g bipartido e um vértice v, constrói dois conjuntos de vértices X e Y atingíveis por v
-//void bipartite_define_header_set(int v, Graph *g, HeaderSet *X, HeaderSet *Y);
+void bipartite_define_header_set(int v, int *aux, Graph *g, HeaderSet *X, HeaderSet *Y);
 
 // Dado um grafo g bipartido, constrói dois subconjuntos de vértices X e Y
-//void bipartite(Graph *g, HeaderSet *X, HeaderSet *Y);
+void bipartite(Graph *g, HeaderSet *X, HeaderSet *Y);
 #endif

@@ -1,6 +1,6 @@
 #include "graph.h"
 #include "set.h"
-#include "stack.h"
+//#include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -207,7 +207,7 @@ int compare_header_set(HeaderSet *NS, HeaderSet *T, Graph *g) {
    return 1;
 }
 
-HeaderSet* subtraction_set(HeaderSet *NS, HeaderSet *T, Graph *g) {
+HeaderSet* subtraction_header_set(HeaderSet *NS, HeaderSet *T, Graph *g) {
    // Vetor auxiliar para evitar que comparação de duas lista leve O(nm)
    int *t = (int*) calloc(g->vertex_count, sizeof(int));
    Set *ns_list = NS->first;
@@ -286,6 +286,33 @@ void print_set(Set* s) {
          s = s->next;
       }
    }
+}
+
+void bipartite_define_header_set(int v, int *aux, Graph *g, HeaderSet *X, HeaderSet *Y) {
+
+   int i, j;
+
+   insert_header_set(v, X);
+   aux[v] = 1;
+
+   for (j = 0 ; j < g->vertex_count ; j++)
+      if (g->arcs[v][j] > 0 && aux[j] == 0)
+         bipartite_define_header_set(j, aux, g, Y, X);
+}
+
+void bipartite(Graph *g, HeaderSet *X, HeaderSet *Y) {
+   // Estrutura para auxiliar a busca por profundidade
+   // Evita que vértices sejam inseridos mais de uma vez
+   // Otimiza o processo se comparada com o uso da função exist_vertex_set()
+   int aux[g->vertex_count];
+   int i;
+
+   for (i = 0 ; i < g->vertex_count ; i++)
+      aux[i] = 0;
+
+   for (i = 0 ; i < g->vertex_count ; i++)
+      if (aux[i] == 0)
+         bipartite_define_header_set(i, aux, g, X, Y);
 }
 
 /*

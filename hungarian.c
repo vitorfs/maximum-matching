@@ -19,11 +19,21 @@ void print_arcs(Arcs* a) {
 // Deve ser reexecutado para todo vértice não M-saturado
 Arcs* hungarian(Graph *g) {
    int i, j, u;
-   HeaderSet *S, *T, *NS;
+   HeaderSet *S = (HeaderSet*) malloc(sizeof(HeaderSet));
+   HeaderSet *T = (HeaderSet*) malloc(sizeof(HeaderSet));
+   HeaderSet *NS = (HeaderSet*) malloc(sizeof(HeaderSet));
+   HeaderSet *X = (HeaderSet*) malloc(sizeof(HeaderSet));
+   HeaderSet *Y = (HeaderSet*) malloc(sizeof(HeaderSet));
    Arcs *M;
 
-   Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
-   bipartite(g, bg, 0);
+   init_header_set(X);
+   init_header_set(Y);
+   // Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
+   bipartite(g, X, Y);
+   print_set(X->first);
+   puts("");
+   print_set(Y->first);
+   getchar();
 
    init_header_set(S);
    init_header_set(T);
@@ -46,10 +56,10 @@ Arcs* hungarian(Graph *g) {
    }
 
    print_arcs(M); //**************************
-   u = non_saturation_header_set(bg->X, M);
+   //u = non_saturation_header_set(X, M);
 
    printf("\nX: "); //**************************
-   print_set(bg->X); //**************************
+   print_set(X->first); //**************************
 
    printf("\n%d\n", u); //**************************
 
@@ -65,7 +75,7 @@ Arcs* hungarian(Graph *g) {
       builds_neighborhood_header_set(S, NS, g);
 
       while (!compare_header_set(NS, T, g)) {
-         y = saturation_header_set(subtraction_set(NS, T, g), M);
+         //y = saturation_header_set(subtraction_header_set(NS, T, g), M);
          if (y < 0) break;
 
          insert_header_set(M->arcs[0][y], S);
@@ -79,13 +89,13 @@ Arcs* hungarian(Graph *g) {
       else {
          Arcs* P;
          P = init_arcs(g->vertex_count);
-         y = non_saturation_header_set(subtraction_set(NS, T, g), M);
+         //y = non_saturation_header_set(subtraction_header_set(NS, T, g), M);
 
          P = augmenting_path(u, y, M, g);
          symmetric_difference_arcs(y, P, M);
       }
 
-      u = non_saturation_header_set(bg->X, M);
+      //u = non_saturation_header_set(X, M);
    }
 
    return M;
@@ -95,7 +105,7 @@ Arcs* hungarian(Graph *g) {
 int main(int argc, char* argv[]) {
   char* filename;
   int read_status = -1;
-  
+
   Graph* graph = (Graph*) malloc(sizeof(Graph));
 
   filename = (char*) malloc(128 * sizeof(char));
