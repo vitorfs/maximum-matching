@@ -233,9 +233,11 @@ void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
    while (P->arcs[0][y] >= 0) {
       if (M->arcs[0][y] != P->arcs[0][y])
          insert_arcs(y, P->arcs[0][y], 0, M);
-      else
-         remove_arcs(y, P->arcs[0][y], M);
+      //else
+         //remove_arcs(y, P->arcs[0][y], M);
       y = P->arcs[0][y];
+      if (P->arcs[0][y] >= 0)
+         y = P->arcs[0][y];
    }
 }
 
