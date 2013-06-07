@@ -10,7 +10,7 @@ void empty_graph(Graph* g) {
 }
 
 void init_graph(Graph* g, int n) {
-  int i, j;
+  int i;
   empty_graph(g);
 
   g->vertex_count = n;

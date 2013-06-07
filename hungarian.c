@@ -1,18 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 #include "graph.h"
 #include "set.h"
 
 int PRINT_MATRIX = 0;
-
-void print_arcs(Arcs* a) {
-  printf("----------\n");
-  int i;
-  for (i = 0 ; i < a->n ; i++) {
-    printf("%d %d\n", i, a->arcs[0][i]);  
-  }
-  printf("----------\n");
-}
 
 // Recebe um grafo g
 // Retorna um emparelhamento maximal
@@ -81,11 +72,24 @@ Arcs* hungarian(Graph *g) {
       //puts("");
 
       while (!compare_header_set(NS, T, g)) {
-         //printf("%d %d", NS->nodes, T->nodes);
-         //getchar();
+//*
+         puts("Step 1");
+         printf("NS nodes: %d\nT nodes: %d\n", NS->nodes, T->nodes);
+         print_set(NS->first);
+         puts("- NS");
+         print_set(S->first);
+         puts(" - S");
+         print_set(T->first);
+         puts("- T");
+         puts("");
+         getchar();
+
+         puts("Step 2");
          HeaderSet *asdf = subtraction_header_set(NS, T, g);
          print_set(asdf->first);
-         puts(" - NS\\T");
+         puts("- NS\\T");
+         print_arcs(M);
+
          y = saturation_header_set(subtraction_header_set(NS, T, g), M);
          printf("Saturation: %d\n", y);
          if (y < 0) break;
@@ -103,18 +107,23 @@ Arcs* hungarian(Graph *g) {
          getchar();
       }
       if (compare_header_set(NS, T, g))
-         return M;
+         break;
          //return S;
       else {
          Arcs* P;
          P = init_arcs(g->vertex_count);
          y = non_saturation_header_set(subtraction_header_set(NS, T, g), M);
+         puts("Step 3");
          printf("Non-saturation: %d\n", y);
 
          P = augmenting_path(u, y, M, g);
          print_arcs(P);
+         // Se não existe um caminho aumentante de y para u retorna M
+         if (P == NULL)
+            break;
          symmetric_difference_arcs(y, P, M);
          print_arcs(M);
+         getchar();
       }
 
       u = non_saturation_header_set(X, M);
@@ -151,6 +160,7 @@ int main(int argc, char* argv[]) {
 
   Arcs* matching = (Arcs*) malloc(sizeof(Arcs));
   matching = hungarian(graph);
-  //print_arcs(matching);
+  puts("TESTE");
+  print_arcs(matching);
   return 0;
 }

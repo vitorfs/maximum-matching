@@ -104,6 +104,9 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g);
 // Imprime os vértices de Set *s
 void print_set(Set* s);
 
+// Imprime as arestas em Arcs *a
+void print_arcs(Arcs* a);
+
 // Dado um grafo g bipartido e um vértice v, constrói dois conjuntos de vértices X e Y atingíveis por v
 void bipartite_define_header_set(int v, int *aux, Graph *g, HeaderSet *X, HeaderSet *Y);
 

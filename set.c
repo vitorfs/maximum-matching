@@ -240,16 +240,26 @@ void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
 }
 
 Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
-   int i;
+   int i = 0;
    int z;
    Arcs *P = init_arcs(g->vertex_count);
 
+   puts("----------");
+   printf("Origem: %d\n", y);
+   printf("Destino: %d\n", u);
+   puts("----------");
+
    P->arcs[1][y] = 1;
    for ( ; ; ) {
+      print_arcs(P);
+      print_arcs(M);
       // Procura vértices incidentes em y
       for (z = -1 ; i < g->vertex_count ; i++)
-         if (g->arcs[y][i] > 0 && P->arcs[1][i] != 1)
+         if (g->arcs[y][i] > 0 && P->arcs[1][i] != 1) {
             z = i;
+            break;
+         }
+      printf("z = %d / y = %d / i = %d\n", z, y, i);
 
       // Caso não encontre vértices incidentes em y, PARE.
       // Ou seja, z permanece com o valor definido acima
@@ -261,8 +271,12 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
       if (z == u) {
          P->arcs[0][y] = z;
          return P;
-      // se não, se vértice z é M-saturado, faça:
-      } else if (M->arcs[0][z] >= 0) {
+      // se vértice z não é M-saturado procure outro a partir do próximo i
+      } else if (M->arcs[0][z] < 0) {
+         i++;
+      // caso contrário, se vértice z é M-saturado, faça:
+      } else {
+
          P->arcs[0][y] = z;   // z é o próximo salto de y
          P->arcs[1][z] = 1;   // marca z como visitado
          y = M->arcs[0][z];   // y recebe o vértice vizinho de z em M
@@ -271,7 +285,8 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
 
          i = 0;   // zera i para recomeçar a busca a partir do novo y
       }
-      // caso contrário procure outro vértice a partir de i
+      printf("i = %d", i);
+      getchar();
    }
 
    return NULL;
@@ -288,9 +303,18 @@ void print_set(Set* s) {
    }
 }
 
+void print_arcs(Arcs* a) {
+   printf("----------\n");
+   int i;
+   for (i = 0 ; i < a->n ; i++) {
+      printf("%d %d\n", i, a->arcs[0][i]);  
+   }
+   printf("----------\n");
+}
+
 void bipartite_define_header_set(int v, int *aux, Graph *g, HeaderSet *X, HeaderSet *Y) {
 
-   int i, j;
+   int j;
 
    insert_header_set(v, X);
    aux[v] = 1;
