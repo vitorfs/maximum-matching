@@ -30,10 +30,11 @@ Arcs* hungarian(Graph *g) {
    init_header_set(Y);
    // Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
    bipartite(g, X, Y);
-   print_set(X->first);
-   puts("");
-   print_set(Y->first);
-   getchar();
+   //print_set(X->first);
+   //puts("");
+   //print_set(Y->first);
+   //puts("");
+   //getchar();
 
    init_header_set(S);
    init_header_set(T);
@@ -41,7 +42,8 @@ Arcs* hungarian(Graph *g) {
 
    M = init_arcs(g->vertex_count);
 
-   print_arcs(M); //**********************
+   //print_arcs(M);
+   //getchar();
 
    int break_loop = 0;
    for (i = 0 ; i < g->vertex_count ; i++) {
@@ -55,33 +57,50 @@ Arcs* hungarian(Graph *g) {
         break;
    }
 
-   print_arcs(M); //**************************
-   //u = non_saturation_header_set(X, M);
+   //print_arcs(M);
+   //getchar();
 
-   printf("\nX: "); //**************************
-   print_set(X->first); //**************************
-
-   printf("\n%d\n", u); //**************************
+   u = non_saturation_header_set(X, M);
+   //printf("%d\n", u);
 
    while (u >= 0) {
       int y;
+
       insert_header_set(u, S);
-      printf("\nS: "); //**************************
-      print_set(S->first); //**************************
+      //print_set(S->first);
+      //puts("");
+
       zero_header_set(T);
+      //print_set(T->first);
+      //puts("");
+
       zero_header_set(NS);
-      printf("\nNS: "); //**************************
-      print_set(NS->first); //**************************
+      //print_set(NS->first);
       builds_neighborhood_header_set(S, NS, g);
+      //print_set(NS->first);
+      //puts("");
 
       while (!compare_header_set(NS, T, g)) {
-         //y = saturation_header_set(subtraction_header_set(NS, T, g), M);
+         //printf("%d %d", NS->nodes, T->nodes);
+         //getchar();
+         HeaderSet *asdf = subtraction_header_set(NS, T, g);
+         print_set(asdf->first);
+         puts(" - NS\\T");
+         y = saturation_header_set(subtraction_header_set(NS, T, g), M);
+         printf("Saturation: %d\n", y);
          if (y < 0) break;
 
          insert_header_set(M->arcs[0][y], S);
+         print_set(S->first);
+         puts(" - S");
          insert_header_set(y, T);
+         print_set(T->first);
+         puts(" - T");
 
          builds_neighborhood_header_set(S, NS, g);
+         print_set(NS->first);
+         puts(" - NS");
+         getchar();
       }
       if (compare_header_set(NS, T, g))
          return M;
@@ -89,13 +108,17 @@ Arcs* hungarian(Graph *g) {
       else {
          Arcs* P;
          P = init_arcs(g->vertex_count);
-         //y = non_saturation_header_set(subtraction_header_set(NS, T, g), M);
+         y = non_saturation_header_set(subtraction_header_set(NS, T, g), M);
+         printf("Non-saturation: %d\n", y);
 
          P = augmenting_path(u, y, M, g);
+         print_arcs(P);
          symmetric_difference_arcs(y, P, M);
+         print_arcs(M);
       }
 
-      //u = non_saturation_header_set(X, M);
+      u = non_saturation_header_set(X, M);
+      printf("%d\n", u);
    }
 
    return M;

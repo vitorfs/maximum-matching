@@ -143,7 +143,7 @@ int exist_vertex_header_set(int v, HeaderSet *head) {
    return 0;
 }
 
-int non_saturation_set(HeaderSet *head, Arcs *M) {
+int non_saturation_header_set(HeaderSet *head, Arcs *M) {
    Set *a = head->first;
    int v;
    
@@ -156,7 +156,7 @@ int non_saturation_set(HeaderSet *head, Arcs *M) {
    return -1;
 }
 
-int saturation_set(HeaderSet *head, Arcs *M) {
+int saturation_header_set(HeaderSet *head, Arcs *M) {
    Set *a = head->first;
    int v;
 
@@ -212,7 +212,7 @@ HeaderSet* subtraction_header_set(HeaderSet *NS, HeaderSet *T, Graph *g) {
    int *t = (int*) calloc(g->vertex_count, sizeof(int));
    Set *ns_list = NS->first;
    Set *t_list = T->first;
-   HeaderSet *Subtraction;
+   HeaderSet *Subtraction = (HeaderSet*) malloc(sizeof(HeaderSet));
    init_header_set(Subtraction);
 
    while (t_list != NULL) {
@@ -230,9 +230,9 @@ HeaderSet* subtraction_header_set(HeaderSet *NS, HeaderSet *T, Graph *g) {
 }
 
 void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
-   while (y >= 0) {
+   while (P->arcs[0][y] >= 0) {
       if (M->arcs[0][y] != P->arcs[0][y])
-         insert_arcs(y, P->arcs[0][y], P->arcs[1][y], M);
+         insert_arcs(y, P->arcs[0][y], 0, M);
       else
          remove_arcs(y, P->arcs[0][y], M);
       y = P->arcs[0][y];
@@ -279,7 +279,7 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
 
 void print_set(Set* s) {
    if (s == NULL)
-      printf("O conjunto estah nulo.\n");
+      printf("O conjunto estah nulo.");
    else {
       while (s != NULL) {
          printf("%d, ", s->vertex);
