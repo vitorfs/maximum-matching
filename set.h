@@ -1,5 +1,5 @@
-#ifndef _SET_
-#define _SET_
+#ifndef SET_H
+#define SET_H
 
 #include <stdlib.h>
 #include "graph.h"
@@ -99,13 +99,20 @@ void symmetric_difference_arcs(int y, Arcs *P, Arcs *M);
 
 // Encontra um caminho aumentante ou NULL
 // Retorna Arcs* da semântica 2
-Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g);
+Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g, int *visited);
+
+// Copia o caminho aumentante de source para destination a partir do vértice y
+void copy_arcs(int y, Arcs *source, Arcs *destination); 
 
 // Imprime os vértices de Set *s
 void print_set(Set* s);
 
 // Imprime as arestas em Arcs *a
 void print_arcs(Arcs* a);
+
+// Imprime um vetor de inteiro
+// Recebe como parâmetro além do vetor o tamanho do mesmo
+void print_array(int size, int *array); 
 
 // Dado um grafo g bipartido e um vértice v, constrói dois conjuntos de vértices X e Y atingíveis por v
 void bipartite_define_header_set(int v, int *aux, Graph *g, HeaderSet *X, HeaderSet *Y);

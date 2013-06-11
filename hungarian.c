@@ -17,7 +17,6 @@ Arcs* hungarian(Graph *g) {
 
    init_header_set(X);
    init_header_set(Y);
-   // Bipartite_Graph* bg = (Bipartite_Graph*) malloc(sizeof(Bipartite_Graph));
    bipartite(g, X, Y);
    //print_set(X->first);
    //puts("");
@@ -50,7 +49,7 @@ Arcs* hungarian(Graph *g) {
    //getchar();
 
    u = non_saturation_header_set(X, M);
-   //printf("%d\n", u);
+   printf("u = %d\n", u);
 
    while (u >= 0) {
       int y;
@@ -87,7 +86,8 @@ Arcs* hungarian(Graph *g) {
          print_set(asdf->first);
          puts("- NS\\T");
          print_arcs(M);
-
+         puts("Arestas emparelhadas");
+//*/
          y = saturation_header_set(subtraction_header_set(NS, T, g), M);
          printf("Saturation: %d\n", y);
          if (y < 0) break;
@@ -110,22 +110,25 @@ Arcs* hungarian(Graph *g) {
       else {
          Arcs* P;
          P = init_arcs(g->vertex_count);
+         int *visited = (int*) calloc(g->vertex_count, sizeof(int));
          y = non_saturation_header_set(subtraction_header_set(NS, T, g), M);
          puts("Step 3");
          printf("Non-saturation: %d\n", y);
 
-         P = augmenting_path(u, y, M, g);
+         P = augmenting_path(u, y, M, g, visited);
          print_arcs(P);
+         puts("Caminho aumentante P");
          // Se não existe um caminho aumentante de y para u retorna M
          if (P == NULL)
             break;
          symmetric_difference_arcs(y, P, M);
          print_arcs(M);
+         puts("Arestas emparelhadas");
          getchar();
       }
 
       u = non_saturation_header_set(X, M);
-      printf("%d\n", u);
+      printf("u = %d\n", u);
    }
 
    return M;

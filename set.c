@@ -241,27 +241,35 @@ void symmetric_difference_arcs(int y, Arcs *P, Arcs *M) {
    }
 }
 
-Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
+Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g, int *visited) {
    int i = 0;
    int z;
    Arcs *P = init_arcs(g->vertex_count);
+   Arcs *aux;
 
-   puts("----------");
+   puts("Pressione enter para começar");
+   getchar();
    printf("Origem: %d\n", y);
-   printf("Destino: %d\n", u);
-   puts("----------");
+   printf("Destino: %d\n\n", u);
 
-   P->arcs[1][y] = 1;
+   visited[y] = 1;
+   print_array(g->vertex_count, visited);
+   puts("Visitado y\n");
    for ( ; ; ) {
+
       print_arcs(P);
+      puts("Caminho aumentante P");
       print_arcs(M);
+      puts("Arestas emparelhadas");
+
       // Procura vértices incidentes em y
       for (z = -1 ; i < g->vertex_count ; i++)
-         if (g->arcs[y][i] > 0 && P->arcs[1][i] != 1) {
+         if (g->arcs[y][i] > 0 && visited[i] == 0) {
             z = i;
             break;
          }
-      printf("z = %d / y = %d / i = %d\n", z, y, i);
+
+      printf("z = %d / y = %d / i = %d / u = %d\n", z, y, i, u);
 
       // Caso não encontre vértices incidentes em y, PARE.
       // Ou seja, z permanece com o valor definido acima
@@ -278,20 +286,50 @@ Arcs* augmenting_path(int u, int y, Arcs *M, Graph *g) {
          i++;
       // caso contrário, se vértice z é M-saturado, faça:
       } else {
+         visited[z] = 1;   // marca z como visitado
+         print_array(g->vertex_count, visited);
+         puts("Visitado z\n");
 
-         P->arcs[0][y] = z;   // z é o próximo salto de y
-         P->arcs[1][z] = 1;   // marca z como visitado
-         y = M->arcs[0][z];   // y recebe o vértice vizinho de z em M
-         P->arcs[0][z] = y;   // y é o próximo salto de z
-         P->arcs[1][y] = 1;   // marca y como visitado
+         aux = augmenting_path(u, M->arcs[0][z], M, g, visited); // busca caminho aumentante a partir do próximo vértice
 
-         i = 0;   // zera i para recomeçar a busca a partir do novo y
+         // se não encontrar caminho aumentante partindo do adjacente de z continue a busca do pŕoximo i
+         if (aux == NULL) {
+            i++;
+            visited[z] = 0;
+            visited[M->arcs[0][z]] = 0;
+
+            print_array(g->vertex_count, visited);
+            puts("Removido último y e z\n");
+
+         // caso tenha encontrado um caminho aumentante, faça:
+         } else {
+            print_arcs(aux);
+            puts("Caminho a partir do adjacente de z\n");
+            print_arcs(P);
+            puts("Caminho em P");
+
+            copy_arcs(M->arcs[0][z], aux, P);   // copia o caminho encontrado a partir do adjacente de z
+            P->arcs[0][y] = z;                  // constrói caminho atráz de z
+            P->arcs[0][z] = M->arcs[0][z];      // constrói caminho de z para seu adjacente
+
+            print_arcs(P);
+            puts("Caminho em P após a fusão");
+
+            return P;
+         }
       }
       printf("i = %d", i);
       getchar();
    }
 
    return NULL;
+}
+
+void copy_arcs(int y, Arcs *source, Arcs *destination) {
+   while (y >= 0) {
+      destination->arcs[0][y] = source->arcs[0][y];
+      y = source->arcs[0][y];
+   }
 }
 
 void print_set(Set* s) {
@@ -306,12 +344,27 @@ void print_set(Set* s) {
 }
 
 void print_arcs(Arcs* a) {
-   printf("----------\n");
    int i;
-   for (i = 0 ; i < a->n ; i++) {
-      printf("%d %d\n", i, a->arcs[0][i]);  
-   }
-   printf("----------\n");
+
+   printf("----------------------------------------\n");
+   for (i = 0 ; i < a->n ; i++)
+      printf("%3d ", i);
+   puts("");
+   for (i = 0 ; i < a->n ; i++)
+      printf("%3d ", a->arcs[0][i]);  
+   printf("\n----------------------------------------\n");
+}
+
+void print_array(int size, int *array) {
+   int i;
+
+   printf("----------------------------------------\n");
+   for (i = 0 ; i < size ; i++)
+      printf("%3d ", i);
+   puts("");
+   for (i = 0 ; i < size ; i++)
+      printf("%3d ", array[i]);
+   printf("\n----------------------------------------\n");
 }
 
 void bipartite_define_header_set(int v, int *aux, Graph *g, HeaderSet *X, HeaderSet *Y) {
